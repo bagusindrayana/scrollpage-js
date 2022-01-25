@@ -19,12 +19,10 @@ class ScrollPage {
         body.addEventListener('touchstart', function(event) {
             _this.touchstartX = event.changedTouches[0].screenX;
             _this.touchstartY = event.changedTouches[0].screenY;
-            console.log("touchstart");
         }, false);
     
         body.addEventListener('touchend', function(event) {
             _this.scrollListener(event);
-            console.log("touchend");
         }, false); 
 
         const parent = document.querySelector(this.element);
@@ -100,10 +98,10 @@ class ScrollPage {
             const dely = this.touchendY - this.touchstartY;
             if(Math.abs(delx) < Math.abs(dely)){
                 if(dely > 0){
-                    up = false;
+                    up = true;
                 }
                 else {
-                    up = true;
+                    up = false;
                 }
             }
         }
