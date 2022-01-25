@@ -1,9 +1,9 @@
-# bagusindrayana/scrollpage
+# scrollpage-js
 ![npm (scoped)](https://img.shields.io/npm/v/@bagusindrayana/scrollpage)
 
 Single full page scroll animation inspired from fullPage JS
 
-> `npm i @bagusindrayana/scrollpage`
+> `npm i scrollpage-js`
 
 
 ## Usage
