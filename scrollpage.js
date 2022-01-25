@@ -10,6 +10,23 @@ class ScrollPage {
             _this.scrollListener(e);
         }, { passive: options?.passive ?? false });
 
+        _this.touchstartX = 0;
+        _this.touchstartY = 0;
+        _this.touchendX = 0;
+        _this.touchendY = 0;
+
+        const body = document.body;
+        body.addEventListener('touchstart', function(event) {
+            _this.touchstartX = event.changedTouches[0].screenX;
+            _this.touchstartY = event.changedTouches[0].screenY;
+        }, false);
+    
+        body.addEventListener('touchend', function(event) {
+            scrollListener(event);
+            
+
+        }, false); 
+
         const parent = document.querySelector(this.element);
         _this.childs = [...parent.children];
         _this.stop = true;
@@ -61,7 +78,6 @@ class ScrollPage {
     scrollListener(e) {
         this.scrollCallback(this);
         const childs = this.childs;
-        // this.currentTarget = e.target;
         var next = e.target.nextElementSibling;
         var prev = e.target.previousElementSibling;
 
@@ -70,15 +86,36 @@ class ScrollPage {
         } else {
             return false;
         }
-        
-        
+
         const active = e.target.closest("."+this.pageSelectedClass);
         if(active){
             active.classList.remove(this.pageSelectedClass);
         }
 
-        
+        let up = false;
+        if(e.changedTouches.length){
+            this.touchendX = e.changedTouches[0].screenX;
+            this.touchendY = e.changedTouches[0].screenY;
+            const delx = this.touchendX - this.touchstartX;
+            const dely = this.touchendY - this.touchstartY;
+            if(Math.abs(delx) < Math.abs(dely)){
+                if(dely > 0){
+                    up = false;
+                }
+                else {
+                    up = true;
+                }
+            }
+        }
+
         if (e.deltaY < 0) {
+            up = true;
+        } else if (e.deltaY > 0) {
+            up = false;
+        }
+
+        
+        if (up) {
             e.preventDefault();
             if (childs.includes(prev)) {
                 if(prev){
@@ -100,7 +137,7 @@ class ScrollPage {
          
             }
     
-        } else if (e.deltaY > 0) {
+        } else {
             e.preventDefault();
             if (childs.includes(next)) {
                 if(next){
@@ -120,8 +157,6 @@ class ScrollPage {
                     
                 }
             }
-        } else {
-            return false;
         }
 
     }
