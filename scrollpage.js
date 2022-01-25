@@ -433,8 +433,22 @@ class ScrollPage {
                     e.target.classList.add(_this.menuSelectedClass);
                     
                 });
+                if ('ontouchstart' in window) {
+                    item.addEventListener("touchstart", function() {
+                        const actives = menu.querySelectorAll("."+_this.menuSelectedClass);
+                        if(actives.length > 0){
+                            actives.forEach(active => {
+                                active.classList.remove(_this.menuSelectedClass);
+                            });
+                        }
+                        _this.moveTo(item.getAttribute('data-page'));
+                        e.target.classList.add(_this.menuSelectedClass);
+                    });
+                }
             });
         }
+
+       
     }
 
     findPageByNode(node){
