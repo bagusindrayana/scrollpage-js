@@ -6,7 +6,9 @@ Single full page scroll animation inspired from fullPage JS
 
 ## Installation using npm
 
-`npm i scrollpage-js`
+```
+npm i scrollpage-js
+```
 
 
 ## Usage
@@ -88,3 +90,11 @@ const scrollPage = new ScrollPage("#main-page",{
     }
 }); 
 ```
+
+
+## Resource & Reference
+
+- https://alvarotrigo.com/fullPage/
+- https://stackoverflow.com/questions/48068487/full-page-scrolling-with-plain-javascript
+- https://codepen.io/brian-chen/pen/eKpMrX
+- https://easings.net
