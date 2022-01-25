@@ -91,6 +91,34 @@ const scrollPage = new ScrollPage("#main-page",{
 }); 
 ```
 
+## Method
+
+- `onScroll(e)` will be fired if the mouse wheel is scrolling
+- `onMove(e)` will fire if animation is playing
+- `onStart(e)` will fire before the animation plays
+- `onFinish(e)` will be fired after the animation finishes playing
+- `moveTo(page,options)` move to spesific page (you can pass string,number or DOM object to `page` argument)
+
+
+## Menu
+you can add a custom menu that works to control the page, this will read every element that is in the menu element and if those elements are clicked it will redirect to the page based on the `data-page` attribute
+
+
+```html
+<ul class="side-nav">
+    <!-- add the `data-page` attribute that contains the selector to the page elemen -->
+    <li data-page="#page1" class="active">Page 1</li>
+    <li data-page="#page2" >Page 2</li>
+    <li data-page="#page3" >Page 3</li>
+</ul>
+```
+
+```js
+const scrollPage = new ScrollPage("#main-page",{
+    menu:"ul.side-nav",//menu selector
+});
+```
+
 
 ## Resource & Reference
 
