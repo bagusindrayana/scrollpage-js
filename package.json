@@ -1,5 +1,6 @@
 {
     "name": "scrollpage-js",
+    "description": "Single full page scroll animation inspired by fullPage JS",
     "version": "0.0.2",
     "keywords": [
         "scroll",
@@ -8,5 +9,9 @@
         "scroll-animation"
     ],
     "author": "Bagus Indrayana <bagusindrayanaindo@gmail.com> (https://bagusindrayana.github.io)",
-    "license": "MIT"
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/bagusindrayana/scrollpage-js/issues"
+    },
+    "homepage": "https://github.com/bagusindrayana/scrollpage-js"
 }
