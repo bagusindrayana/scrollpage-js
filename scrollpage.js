@@ -118,7 +118,6 @@ class ScrollPage {
 
         
         if (up) {
-            e.preventDefault();
             if (childs.includes(prev)) {
                 if(prev){
                     this.stop = false;
@@ -140,7 +139,6 @@ class ScrollPage {
             }
     
         } else {
-            e.preventDefault();
             if (childs.includes(next)) {
                 if(next){
                     this.stop = false;
