@@ -1,4 +1,12 @@
 {
     "name": "scrollpage-js",
-    "version": "0.0.2"
+    "version": "0.0.2",
+    "keywords": [
+        "scroll",
+        "scrollview",
+        "animation",
+        "scroll-animation"
+    ],
+    "author": "Bagus Indrayana <bagusindrayanaindo@gmail.com> (https://bagusindrayana.github.io)",
+    "license": "MIT"
 }
