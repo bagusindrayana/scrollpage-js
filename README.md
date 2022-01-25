@@ -103,6 +103,7 @@ const scrollPage = new ScrollPage("#main-page",{
 ## Menu
 you can add a custom menu that works to control the page, this will read every element that is in the menu element and if those elements are clicked it will redirect to the page based on the `data-page` attribute
 
+every selected menu both menu item and page element will be add `active` class, you can change class name with `pageSelectedClass` and `menuSelectedClass` in options
 
 ```html
 <ul class="side-nav">
@@ -118,6 +119,7 @@ const scrollPage = new ScrollPage("#main-page",{
     menu:"ul.side-nav",//menu selector
 });
 ```
+
 
 
 ## Resource & Reference
