@@ -19,10 +19,12 @@ class ScrollPage {
         body.addEventListener('touchstart', function(event) {
             _this.touchstartX = event.changedTouches[0].screenX;
             _this.touchstartY = event.changedTouches[0].screenY;
+            console.log("touchstart");
         }, false);
     
         body.addEventListener('touchend', function(event) {
             scrollListener(event);
+            console.log("touchend");
             
 
         }, false); 
