@@ -7,6 +7,7 @@ class ScrollPage {
         _this.initEvents();
 
         document.addEventListener('wheel', function (e) {
+            e.preventDefault();
             _this.scrollListener(e);
         }, { passive: options?.passive ?? false });
 
@@ -17,6 +18,7 @@ class ScrollPage {
 
         const body = document.body;
         body.addEventListener('touchstart', function(event) {
+            e.preventDefault();
             _this.touchstartX = event.changedTouches[0].screenX;
             _this.touchstartY = event.changedTouches[0].screenY;
         },{passive: false});
@@ -74,9 +76,6 @@ class ScrollPage {
     }
 
     scrollListener(e) {
-        if (e.cancelable) {
-            e.preventDefault();
-        }
         this.scrollCallback(this);
         const childs = this.childs;
         var next = e.target.nextElementSibling;
