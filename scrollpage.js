@@ -19,11 +19,11 @@ class ScrollPage {
         body.addEventListener('touchstart', function(event) {
             _this.touchstartX = event.changedTouches[0].screenX;
             _this.touchstartY = event.changedTouches[0].screenY;
-        }, false);
+        },{passive: false});
     
         body.addEventListener('touchend', function(event) {
             _this.scrollListener(event);
-        }, false); 
+        },{passive: true}); 
 
         const parent = document.querySelector(this.element);
         _this.childs = [...parent.children];
@@ -74,6 +74,7 @@ class ScrollPage {
     }
 
     scrollListener(e) {
+        e.preventDefault();
         this.scrollCallback(this);
         const childs = this.childs;
         var next = e.target.nextElementSibling;
