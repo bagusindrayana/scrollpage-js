@@ -23,10 +23,8 @@ class ScrollPage {
         }, false);
     
         body.addEventListener('touchend', function(event) {
-            scrollListener(event);
+            _this.scrollListener(event);
             console.log("touchend");
-            
-
         }, false); 
 
         const parent = document.querySelector(this.element);
@@ -110,10 +108,12 @@ class ScrollPage {
             }
         }
 
-        if (e.deltaY < 0) {
-            up = true;
-        } else if (e.deltaY > 0) {
-            up = false;
+        if(e.deltaY != undefined && e.deltaY != null){
+            if (e.deltaY < 0) {
+                up = true;
+            } else if (e.deltaY > 0) {
+                up = false;
+            }
         }
 
         
