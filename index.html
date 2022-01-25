@@ -48,6 +48,12 @@
             margin: 0px;
         }
 
+        ul.side-nav li {
+            color: white;
+            list-style: none;
+            margin: 5px;
+        }
+
        
     </style>
 </head>
@@ -67,12 +73,13 @@
 <script src="./scrollpage.js"></script>
 <script>
     const scrollPage = new ScrollPage("#main-page",{
-        animation:"easeOutCubic",
-        time:700,
+        menu:"ul.side-nav",
+        animation:"easeOutBack",
+        time:1000,
         pages:{
             1:{
                 animation:"easeInQuart",
-                time:1000
+                time:700
             },
         }
     });
