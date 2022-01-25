@@ -74,7 +74,9 @@ class ScrollPage {
     }
 
     scrollListener(e) {
-        e.preventDefault();
+        if (e.cancelable) {
+            e.preventDefault();
+        }
         this.scrollCallback(this);
         const childs = this.childs;
         var next = e.target.nextElementSibling;
