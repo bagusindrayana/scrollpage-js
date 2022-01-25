@@ -27,8 +27,8 @@ class ScrollPage {
             _this.scrollListener(event);
         },{passive: true}); 
 
-        const parent = document.querySelector(this.element);
-        _this.childs = [...parent.children];
+        _this.parent = document.querySelector(_this.element);
+        _this.childs = [..._this.parent.children];
         _this.stop = true;
         if(options?.menu){
             _this.setMenu(options?.menu);
@@ -52,6 +52,12 @@ class ScrollPage {
                     }
                 });
             }
+        }
+
+        if(options?.scrollBar){
+            document.body.style.overflow = 'visible';
+        } else {
+            document.body.style.overflow = 'hidden';
         }
     }
 
@@ -93,7 +99,7 @@ class ScrollPage {
         }
 
         let up = false;
-        if(e.changedTouches.length){
+        if(e.changedTouches != undefined && e.changedTouches != null){
             this.touchendX = e.changedTouches[0].screenX;
             this.touchendY = e.changedTouches[0].screenY;
             const delx = this.touchendX - this.touchstartX;
@@ -313,13 +319,13 @@ class ScrollPage {
                     : (1 + easings["easeOutBounce"](2 * x - 1)) / 2;
             }
         };
-    
+        
         var start = window.pageYOffset;
         var startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
-        var documentHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        var parentHeight = Math.max(_this.parent.scrollHeight, _this.parent.offsetHeight, _this.parent.clientHeight, _this.parent.scrollHeight, _this.parent.offsetHeight);
         var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
         var destinationOffset = typeof destination === 'number' ? destination : destination.offsetTop;
-        var destinationOffsetToScroll = documentHeight - destinationOffset < windowHeight ? documentHeight - windowHeight : destinationOffset;
+        var destinationOffsetToScroll = parentHeight - destinationOffset < windowHeight ? parentHeight - windowHeight : destinationOffset;
        
         
         if ('requestAnimationFrame' in window === false) {

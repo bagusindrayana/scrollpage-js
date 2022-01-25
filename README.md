@@ -3,6 +3,8 @@
 
 Single full page scroll animation inspired by fullPage JS
 
+DEMO : http://scrollpage-js.netlify.app/
+
 
 ## Installation using npm
 
@@ -10,6 +12,11 @@ Single full page scroll animation inspired by fullPage JS
 npm i scrollpage-js
 ```
 
+## Using CDN
+
+```
+https://cdn.jsdelivr.net/npm/scrollpage-js@0.0.3/scrollpage.js
+```
 
 ## Usage
 
@@ -17,21 +24,19 @@ HTML
 
 ```html
 <div  id="main-page">
-	<div  id="page1"  class="active"></div>
-	<div  id="page2"></div>
-	<div  id="page3"></div>
+    <div  id="page1"  class="active"></div>
+    <div  id="page2"></div>
+    <div  id="page3"></div>
 </div>
 ```
 
 CSS
 ```css
-body {
-    margin: 0px;
-    padding: 0px;
-    overflow: hidden;
+#main-page {
+    width: 100%;
 }
 
-div {
+#main-page div {
     display: block;
     width: 100%;
     height: 100vh;
@@ -64,7 +69,8 @@ setting animation and duration, all animation reference from https://easings.net
 ```js
 const scrollPage = new ScrollPage("#main-page",{
       animation:"easeInQuart",//default easeInSine
-      time:1000 //default 500
+      time:1000, //default 500
+      scrollBar:true//show or hide scrollbar (default false)
 });
 ```
 
