@@ -1,7 +1,7 @@
 {
     "name": "scrollpage-js",
     "description": "Single full page scroll animation inspired by fullPage JS",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "keywords": [
         "scroll",
         "scrollview",
@@ -13,5 +13,6 @@
     "bugs": {
         "url": "https://github.com/bagusindrayana/scrollpage-js/issues"
     },
-    "homepage": "https://github.com/bagusindrayana/scrollpage-js"
+    "homepage": "https://github.com/bagusindrayana/scrollpage-js",
+    "main":"scrollpage.js"
 }

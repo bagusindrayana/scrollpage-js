@@ -461,3 +461,8 @@ class ScrollPage {
         return this.childs.indexOf(node);
     }
 };
+
+
+if(typeof module != "undefined"){
+    module.exports = ScrollPage;
+}

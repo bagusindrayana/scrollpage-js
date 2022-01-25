@@ -4,6 +4,7 @@
 Single full page scroll animation inspired by fullPage JS
 
 DEMO : http://scrollpage-js.netlify.app/
+CODEPEN : https://codepen.io/bagusindrayana/pen/QWOWKeY
 
 
 ## Installation using npm
@@ -15,7 +16,7 @@ npm i scrollpage-js
 ## Using CDN
 
 ```
-https://cdn.jsdelivr.net/npm/scrollpage-js@0.0.3/scrollpage.js
+https://cdn.jsdelivr.net/npm/scrollpage-js/scrollpage.js
 ```
 
 ## Usage
