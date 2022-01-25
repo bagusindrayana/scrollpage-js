@@ -18,7 +18,7 @@ class ScrollPage {
 
         const body = document.body;
         body.addEventListener('touchstart', function(event) {
-            e.preventDefault();
+            event.preventDefault();
             _this.touchstartX = event.changedTouches[0].screenX;
             _this.touchstartY = event.changedTouches[0].screenY;
         },{passive: false});
