@@ -434,7 +434,7 @@ class ScrollPage {
                     
                 });
                 if ('ontouchstart' in window) {
-                    item.addEventListener("touchstart", function() {
+                    item.addEventListener("touchstart", function(e) {
                         const actives = menu.querySelectorAll("."+_this.menuSelectedClass);
                         if(actives.length > 0){
                             actives.forEach(active => {
