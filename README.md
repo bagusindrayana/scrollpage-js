@@ -50,7 +50,7 @@ div {
 
 JS
 ```html
-<script src="./main.js"></script>
+<script src="./scrollpage.js"></script>
 <script>
     const scrollPage = new ScrollPage("#main-page"); 
 </script>
