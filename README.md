@@ -1,7 +1,7 @@
 # scrollpage-js
 ![npm (scoped)](https://img.shields.io/npm/v/scrollpage-js)
 
-Single full page scroll animation inspired from fullPage JS
+Single full page scroll animation inspired by fullPage JS
 
 
 ## Installation using npm
