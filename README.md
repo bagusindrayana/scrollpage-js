@@ -3,7 +3,10 @@
 
 Single full page scroll animation inspired from fullPage JS
 
-> `npm i scrollpage-js`
+
+## Installation using npm
+
+`npm i scrollpage-js`
 
 
 ## Usage
