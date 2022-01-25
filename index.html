@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollpage JS</title>
+
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+        }
+
+        div {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+
+        #page1 {
+            background-color: aquamarine;
+        }
+
+        #page2 {
+            background-color: blueviolet;
+        }
+
+        #page3 {
+            background-color: darkorange;
+        }
+
+        ul.side-nav {
+            position: fixed;
+            right: 20px;
+            top: 0;
+            bottom: 0;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            align-content: center;
+            justify-content: center;
+            width: 100px;
+            z-index: 999;
+            padding: 0px;
+            margin: 0px;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <div id="main-page">
+        <div id="page1" class="active"></div>
+        <div id="page2"></div>
+        <div id="page3"></div>
+    </div>
+
+    <ul class="side-nav">
+        <li data-page="#page1" class="active">Page 1</li>
+        <li data-page="#page2" >Page 2</li>
+        <li data-page="#page3" >Page 3</li>
+    </ul>
+
+<script src="./main.js"></script>
+<script>
+    const scrollPage = new ScrollPage("#main-page"); 
+
+    
+</script>
+</body>
+</html>
