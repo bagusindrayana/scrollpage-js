@@ -53,6 +53,8 @@ class ScrollPage {
                 });
             }
         }
+        _this.nextPage = _this.currentPage;
+        _this.nextTarget = _this.currentTarget;
 
         if(options?.scrollBar){
             document.body.style.overflow = 'visible';
@@ -85,18 +87,10 @@ class ScrollPage {
     }
 
     scrollListener(e) {
-        this.scrollCallback(this);
+        this.scrollCallback(this.responseCallback());
         const childs = this.childs;
         var next = e.target.nextElementSibling;
         var prev = e.target.previousElementSibling;
-
-        if(this.stop){
-            this.startCallback(this);
-        } else {
-            return false;
-        }
-
-        
 
         let up = false;
         if(e.changedTouches != undefined && e.changedTouches != null){
@@ -126,21 +120,17 @@ class ScrollPage {
         if (up) {
             if (childs.includes(prev)) {
                 if(prev){
-                    this.stop = false;
                     const pn = this.pageNumber(prev);
                     const optionsPage = this.has(this.options?.pages,pn) ? this.options?.pages[pn] : null;
-                    if(optionsPage?.start){
-                        optionsPage?.start();
-                    }
                     let easingAnimation = optionsPage?.animation ?? this.options?.animation;
                     let timeAnimation = optionsPage?.time ?? this.options?.time;
-                    this.currentTarget = prev;
-
-                    //play animation
-                    this.verticalScroll(prev, timeAnimation,easingAnimation,optionsPage?.finish);
-
-                    this.updateMenuClass();
-                    this.updatePageClass();
+                    this.moveTo(prev,{
+                        animation: easingAnimation,
+                        time: timeAnimation,
+                        finish:optionsPage?.finish,
+                        start:optionsPage?.start
+                    });
+                    
                 }
          
             }
@@ -148,24 +138,22 @@ class ScrollPage {
         } else {
             if (childs.includes(next)) {
                 if(next){
-                    this.stop = false;
+      
                     const pn = this.pageNumber(next);
                     const optionsPage = this.has(this.options?.pages,pn) ? this.options?.pages[pn] : null;
-                    if(optionsPage?.start){
-                        optionsPage?.start();
-                    }
+                    
                     let easingAnimation = optionsPage?.animation ?? this.options?.animation;
                     let timeAnimation = optionsPage?.time ?? this.options?.time;
-                    this.currentTarget = next;
-
-                    //play animation
-                    this.verticalScroll(next, timeAnimation,easingAnimation,optionsPage?.finish);
-
-                    this.updateMenuClass();
-                    this.updatePageClass();
+                    this.moveTo(next,{
+                        animation: easingAnimation,
+                        time: timeAnimation,
+                        finish:optionsPage?.finish,
+                        start:optionsPage?.start
+                    });
                 }
             }
         }
+        
     }
 
     updateMenuClass(){
@@ -205,7 +193,6 @@ class ScrollPage {
         const duration = arguments.length <= 1 || arguments[1] === undefined ? 500 : arguments[1];
         const easing = arguments.length <= 2 || (arguments[2] === undefined || arguments[2] === null) ? 'easeInSine' : arguments[2];
         const callback = arguments[3];
-        const loadDestination = arguments.length <= 4 || arguments[4] === undefined ? 0 : arguments[4];
         const easings = {
             easeInSine(x) {
                 return 1 - Math.cos(x * Math.PI / 2);
@@ -381,11 +368,11 @@ class ScrollPage {
                
                 _this.stop = true;
                 _this.currentPage = _this.pageNumber();
-                _this.finishCallback(_this);
+                _this.finishCallback(_this.responseCallback());
                 return;
             }
             
-            _this.moveCallback(_this);
+            _this.moveCallback(_this.responseCallback());
             
     
             requestAnimationFrame(scroll);
@@ -411,6 +398,7 @@ class ScrollPage {
     }
 
     moveTo(page, options = null){
+        
         let target = null;
         let i = 0;
         if (typeof page === 'number' ) {
@@ -419,13 +407,9 @@ class ScrollPage {
         } else if (typeof page === 'string' ) {
             i = this.findPageByNode(document.querySelector(page));
             target = this.childs[i];
-            
-            
         } else if (this.findPageByNode(page) !== -1) {
             i = this.findPageByNode(page);
             target = this.childs[i];
-            
-            
         } else {
             
             target = document.querySelector(page);
@@ -441,6 +425,15 @@ class ScrollPage {
         }
         
         if(target){
+            this.nextPage = this.pageNumber(target);
+            this.nextTarget = target;
+            if(this.stop){
+                this.startCallback(this.responseCallback());
+                
+            } else {
+                return false;
+            }
+            this.stop = false;
             if(options?.start){
                 options?.start();
             }
@@ -448,6 +441,9 @@ class ScrollPage {
             this.verticalScroll(target, options?.time,options?.animation,options?.finish);
             this.updateMenuClass();
             this.updatePageClass();
+
+            const event = new Event(this.currentTarget.getAttribute("id"));
+            this.parent.dispatchEvent(event);
         } else {
             console.e("page not found");
         }
@@ -477,6 +473,26 @@ class ScrollPage {
 
     findPageByNode(node){
         return this.childs.indexOf(node);
+    }
+
+    on(pageName, callback){
+        const _this = this;
+        _this.parent.addEventListener(pageName, function (e) {
+            callback(_this.responseCallback());
+        }, false);
+        
+    }
+
+    responseCallback(){
+        const datas = {
+            sp:this,
+            currentPage:this.currentPage,
+            nextPage:this.nextPage,
+            currentPageName:this.currentTarget.getAttribute('id') ?? this.currentPage,
+            nextPageName:this.nextTarget.getAttribute('id') ?? this.nextPage,
+        };
+
+        return datas;
     }
 };
 
