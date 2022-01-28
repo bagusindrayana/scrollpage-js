@@ -25,7 +25,7 @@ HTML
 
 ```html
 <div  id="main-page">
-    <div  id="page1"  class="active"></div>
+    <div  id="page1"></div>
     <div  id="page2"></div>
     <div  id="page3"></div>
 </div>
@@ -71,7 +71,9 @@ setting animation and duration, all animation reference from https://easings.net
 const scrollPage = new ScrollPage("#main-page",{
       animation:"easeInQuart",//default easeInSine
       time:1000, //default 500
-      scrollBar:true//show or hide scrollbar (default false)
+      scrollBar:true,//show or hide scrollbar (default false),
+      pageSelectedClass:"active",//css class name for page element if active or selected (default 'active')
+      menuSelectedClass:"active",//css class name for menu element if active or selected (default 'active')
 });
 ```
 
@@ -156,7 +158,7 @@ every selected menu both menu item and page element will be add `active` class, 
 ```html
 <ul class="side-nav">
     <!-- add the `data-page` attribute that contains the selector to the page elemen -->
-    <li data-page="#page1" class="active">Page 1</li>
+    <li data-page="#page1" >Page 1</li>
     <li data-page="#page2" >Page 2</li>
     <li data-page="#page3" >Page 3</li>
 </ul>
