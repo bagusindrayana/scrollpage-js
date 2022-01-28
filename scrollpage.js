@@ -59,6 +59,9 @@ class ScrollPage {
         } else {
             document.body.style.overflow = 'hidden';
         }
+
+        _this.updateMenuClass();
+        _this.updatePageClass();
     }
 
     initEvents(){
@@ -93,10 +96,7 @@ class ScrollPage {
             return false;
         }
 
-        const active = e.target.closest("."+this.pageSelectedClass);
-        if(active){
-            active.classList.remove(this.pageSelectedClass);
-        }
+        
 
         let up = false;
         if(e.changedTouches != undefined && e.changedTouches != null){
@@ -134,12 +134,13 @@ class ScrollPage {
                     }
                     let easingAnimation = optionsPage?.animation ?? this.options?.animation;
                     let timeAnimation = optionsPage?.time ?? this.options?.time;
-                    prev.classList.add(this.pageSelectedClass);
                     this.currentTarget = prev;
 
                     //play animation
                     this.verticalScroll(prev, timeAnimation,easingAnimation,optionsPage?.finish);
-                    
+
+                    this.updateMenuClass();
+                    this.updatePageClass();
                 }
          
             }
@@ -155,16 +156,45 @@ class ScrollPage {
                     }
                     let easingAnimation = optionsPage?.animation ?? this.options?.animation;
                     let timeAnimation = optionsPage?.time ?? this.options?.time;
-                    next.classList.add(this.pageSelectedClass);
                     this.currentTarget = next;
 
                     //play animation
                     this.verticalScroll(next, timeAnimation,easingAnimation,optionsPage?.finish);
-                    
+
+                    this.updateMenuClass();
+                    this.updatePageClass();
                 }
             }
         }
+    }
 
+    updateMenuClass(){
+        if(this.menu){
+            const activeMenus = this.menu.querySelectorAll("."+this.menuSelectedClass);
+            if(activeMenus.length > 0){
+                activeMenus.forEach(menuItem => {
+                    menuItem.classList.remove(this.menuSelectedClass);
+                });
+            }
+            if(this.currentTarget){
+                const targetMenu = this.menu.querySelector("[data-page='#"+this.currentTarget.getAttribute('id')+"']");
+                if(targetMenu){
+                    targetMenu.classList.add(this.menuSelectedClass);
+                }
+            }
+        }
+    }
+
+    updatePageClass(){
+        if(this.currentTarget){
+            const activePages = this.parent.querySelectorAll("."+this.pageSelectedClass);
+            if(activePages.length > 0){
+                activePages.forEach(pageItem => {
+                    pageItem.classList.remove(this.pageSelectedClass);
+                });
+            }
+            this.currentTarget.classList.add(this.pageSelectedClass);
+        }
     }
 
     verticalScroll(destination) {
@@ -416,6 +446,8 @@ class ScrollPage {
             }
             this.currentTarget = target;
             this.verticalScroll(target, options?.time,options?.animation,options?.finish);
+            this.updateMenuClass();
+            this.updatePageClass();
         } else {
             console.e("page not found");
         }
@@ -423,32 +455,18 @@ class ScrollPage {
 
     setMenu(menuSelector){
         const _this = this;
-        const menu = document.querySelector(menuSelector);
-        if(menu){
-            const menuItems = [...menu.children];
+        _this.menu = document.querySelector(menuSelector);
+        if(_this.menu){
+            const menuItems = [..._this.menu.children];
             menuItems.forEach((item)=>{
                 item.addEventListener('click',(e)=>{
                     e.preventDefault();
-                    const actives = menu.querySelectorAll("."+_this.menuSelectedClass);
-                    if(actives.length > 0){
-                        actives.forEach(active => {
-                            active.classList.remove(_this.menuSelectedClass);
-                        });
-                    }
                     _this.moveTo(item.getAttribute('data-page'));
-                    e.target.classList.add(_this.menuSelectedClass);
-                    
                 });
                 if ('ontouchstart' in window) {
                     item.addEventListener("touchstart", function(e) {
-                        const actives = menu.querySelectorAll("."+_this.menuSelectedClass);
-                        if(actives.length > 0){
-                            actives.forEach(active => {
-                                active.classList.remove(_this.menuSelectedClass);
-                            });
-                        }
                         _this.moveTo(item.getAttribute('data-page'));
-                        e.target.classList.add(_this.menuSelectedClass);
+                      
                     });
                 }
             });
