@@ -3,8 +3,8 @@
 
 Single full page scroll animation inspired by fullPage JS
 
-DEMO : http://scrollpage-js.netlify.app/
-CODEPEN : https://codepen.io/bagusindrayana/pen/QWOWKeY
+- DEMO : http://scrollpage-js.netlify.app/
+- CODEPEN : https://codepen.io/bagusindrayana/pen/QWOWKeY
 
 
 ## Installation using npm
@@ -98,13 +98,54 @@ const scrollPage = new ScrollPage("#main-page",{
 }); 
 ```
 
-## Method
+## Event & Method
 
-- `onScroll(e)` will be fired if the mouse wheel is scrolling
-- `onMove(e)` will fire if animation is playing
-- `onStart(e)` will fire before the animation plays
-- `onFinish(e)` will be fired after the animation finishes playing
+- `onScroll(e)` will be fired if the mouse wheel is scrolling or touch swipe
+- `onMove(e)` will fire if animation is playing/page is moving or scrolling
+- `onStart(e)` will fire before the animation plays/page start moving or scrolling
+- `onFinish(e)` will be fired after the animation finishes playing/page finish moving or scrolling
+- `on(pageName,e)` will fire if move or scrolling to a specific page (based on page element `id` if there is value otherwise will be based on page sequence number starting from 1)
 - `moveTo(page,options)` move to spesific page (you can pass string,number or DOM object to `page` argument)
+
+all response values from the event will be in this format
+```js
+	{
+        sp,// scrollpage object
+        currentPage,// current page number (origin page)
+        nextPage,// next page number (destination page)
+        currentPageName,// current page name (if have `id` otherwise  will olny return page number)
+        nextPageName,// next page name (if have `id` otherwise  will olny return page number)
+    }
+```
+
+
+### Example
+
+```js
+	scrollPage.onScroll(function(e){
+        console.log("Leaving from : "+e.currentPageName);//only fire if you keep scroll your mouse wheel
+        console.log("Scroll to : "+e.nextPageName);
+    });
+
+    scrollPage.onMove(function(e){
+        console.log("Move to : "+e.nextPageName);//will be fired every frame along with the animation (both moving with menu or mouse wheel)
+    });
+    
+    scrollPage.onStart(function(e){
+        console.log("The previous page was : "+e.currentPageName);
+        console.log("The next page is : "+e.nextPageName);
+    });
+
+    scrollPage.onFinish(function(e){
+        console.log("Arrived at : "+e.currentPageName); //will have same value as next page because is already arrived/finish
+        console.log("Done Go to : "+e.nextPageName);
+    });
+
+    scrollPage.on('page3',function(e){
+        console.log("Event 1 on : "+e.currentPageName); //will have same value as next page
+        console.log("Event 2 on : "+e.nextPageName);
+    });
+```
 
 
 ## Menu
@@ -135,3 +176,9 @@ const scrollPage = new ScrollPage("#main-page",{
 - https://stackoverflow.com/questions/48068487/full-page-scrolling-with-plain-javascript
 - https://codepen.io/brian-chen/pen/eKpMrX
 - https://easings.net
+
+
+## Issue / Features Requests / Contribution
+- You can report errors, problems, bugs, or other problems via the github issue, I'll try to respond as soon as possible
+- for the current case, the features that are currently available are enough for me but of course it doesn't rule out the possibility of developing other features if you have other feature ideas you can request it if possible I will implement it soon
+- this is my first javascript library/package so maybe my code is a bit messy and a bit difficult to understand but of course I am open to all suggestions and criticisms that you give you can also change the code as you like, if you want to contribute I will try my best to put everything together
