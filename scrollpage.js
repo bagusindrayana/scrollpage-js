@@ -6,10 +6,10 @@ class ScrollPage {
 
         _this.initEvents();
 
-        document.addEventListener('wheel', function (e) {
-            e.preventDefault();
-            _this.scrollListener(e);
-        }, { passive: options?.passive ?? false });
+        // document.querySelector(element).addEventListener('wheel', function (e) {
+        //     e.preventDefault();
+        //     _this.scrollListener(e);
+        // }, { passive: options?.passive ?? false });
 
         _this.touchstartX = 0;
         _this.touchstartY = 0;
@@ -28,7 +28,14 @@ class ScrollPage {
         },{passive: true}); 
 
         _this.parent = document.querySelector(_this.element);
+        
         _this.childs = [..._this.parent.children];
+        _this.childs.forEach(e => {
+            e.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                _this.scrollListener(e);
+            }, { passive: options?.passive ?? false });
+        });
         _this.stop = true;
         if(options?.menu){
             _this.setMenu(options?.menu);
@@ -87,11 +94,9 @@ class ScrollPage {
     }
 
     scrollListener(e) {
-        this.scrollCallback(this.responseCallback());
         const childs = this.childs;
-        var next = e.target.nextElementSibling;
-        var prev = e.target.previousElementSibling;
-
+        var next = e.currentTarget.nextElementSibling;
+        var prev = e.currentTarget.previousElementSibling;
         let up = false;
         if(e.changedTouches != undefined && e.changedTouches != null){
             this.touchendX = e.changedTouches[0].screenX;
@@ -120,6 +125,9 @@ class ScrollPage {
         if (up) {
             if (childs.includes(prev)) {
                 if(prev){
+                    this.nextPage = this.pageNumber(prev);
+                    this.nextTarget = prev;
+                    this.scrollCallback(this.responseCallback());
                     const pn = this.pageNumber(prev);
                     const optionsPage = this.has(this.options?.pages,pn) ? this.options?.pages[pn] : null;
                     let easingAnimation = optionsPage?.animation ?? this.options?.animation;
@@ -131,6 +139,7 @@ class ScrollPage {
                         start:optionsPage?.start
                     });
                     
+                    
                 }
          
             }
@@ -138,7 +147,9 @@ class ScrollPage {
         } else {
             if (childs.includes(next)) {
                 if(next){
-      
+                    this.nextPage = this.pageNumber(next);
+                    this.nextTarget = next;
+                    this.scrollCallback(this.responseCallback());
                     const pn = this.pageNumber(next);
                     const optionsPage = this.has(this.options?.pages,pn) ? this.options?.pages[pn] : null;
                     
@@ -150,6 +161,7 @@ class ScrollPage {
                         finish:optionsPage?.finish,
                         start:optionsPage?.start
                     });
+                   
                 }
             }
         }

@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scrollpage JS</title>
-
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
         body {
             margin: 0px;
@@ -16,10 +17,22 @@
             width: 100%;
         }
 
-        #main-page div {
+        #main-page .page-item {
             display: block;
             width: 100%;
             height: 100vh;
+            padding: 20px;
+        }
+
+        #main-page .page-item div {
+            display: block;
+            width: calc(100% - 40px);
+            height: calc(100vh - 40px);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            background-color:white; 
+            border: 1px solid black;
         }
 
         #page1 {
@@ -76,26 +89,41 @@
 </head>
 <body>
     <div id="main-page">
-        <div id="page1"></div>
-        <div id="page2"></div>
-        <div id="page3"></div>
+        <div id="page1" class="page-item">
+            <div  >
+                <h3>HELLO WORLD</h3>
+            </div>
+        </div>
+  
+        <div id="page2" class="page-item">
+            <div  >
+                <h3>KEEP SCROLLING BUD</h3>
+            </div>
+        </div>
+        <div id="page3" class="page-item">
+            <div  >
+                <h3>YOU HAVE REACH THE END</h3>
+            </div>
+        </div>
     </div>
 
     <ul class="side-nav">
-        <li data-page="#page1" >Page 1</li>
+        <li data-page="#page1">Page 1</li>
         <li data-page="#page2" >Page 2</li>
         <li data-page="#page3" >Page 3</li>
     </ul>
 
-<script src="./scrollpage.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="./scrollpage.js"></script>
 <script>
+    AOS.init();
     const scrollPage = new ScrollPage("#main-page",{
         menu:"ul.side-nav",
-        animation:"easeOutBack",
+        animation:"easeInQuart",
         time:1000,
         pages:{
-            1:{
-                animation:"easeInQuart",
+            2:{
+                animation:"easeOutBack",
                 time:700
             },
         }
