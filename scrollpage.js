@@ -16,16 +16,16 @@ class ScrollPage {
         _this.touchendX = 0;
         _this.touchendY = 0;
 
-        const body = document.body;
-        body.addEventListener('touchstart', function(event) {
-            event.preventDefault();
-            _this.touchstartX = event.changedTouches[0].screenX;
-            _this.touchstartY = event.changedTouches[0].screenY;
-        },{passive: false});
+        // const body = document.body;
+        // body.addEventListener('touchstart', function(event) {
+        //     event.preventDefault();
+        //     _this.touchstartX = event.changedTouches[0].screenX;
+        //     _this.touchstartY = event.changedTouches[0].screenY;
+        // },{passive: false});
     
-        body.addEventListener('touchend', function(event) {
-            _this.scrollListener(event);
-        },{passive: true}); 
+        // body.addEventListener('touchend', function(event) {
+        //     _this.scrollListener(event);
+        // },{passive: true}); 
 
         _this.parent = document.querySelector(_this.element);
         
@@ -35,6 +35,16 @@ class ScrollPage {
                 e.preventDefault();
                 _this.scrollListener(e);
             }, { passive: options?.passive ?? false });
+
+            e.addEventListener('touchstart', function(event) {
+                event.preventDefault();
+                _this.touchstartX = event.changedTouches[0].screenX;
+                _this.touchstartY = event.changedTouches[0].screenY;
+            },{passive: false});
+        
+            e.addEventListener('touchend', function(event) {
+                _this.scrollListener(event);
+            },{passive: true}); 
         });
         _this.stop = true;
         if(options?.menu){
