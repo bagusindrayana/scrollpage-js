@@ -1,6 +1,7 @@
 class ScrollPage {
     constructor(element, options = null) {
         const _this = this;
+        _this.index = 0;
         _this.element = element;
         _this.options = options;
 
@@ -31,8 +32,17 @@ class ScrollPage {
         _this.parent.setAttribute('scroll-page', true);
         _this.parent.style.position = "relative";
         
-        _this.childs = [..._this.parent.children];
-
+        var pc = [..._this.parent.children];
+        var childs = [];
+        var ignore = null;
+        pc.forEach(child => {
+            if(!child.hasAttribute('ignore-page')){
+                childs.push(child);
+            } else {
+                ignore = null;
+            }
+        });
+        _this.childs = childs;
         _this.childs.forEach(e => {
             e.setAttribute('scroll-page-item', true);
             e.addEventListener('wheel', function (e) {
@@ -212,8 +222,16 @@ class ScrollPage {
 
     scrollListener(e) {
         const childs = this.childs;
-        var next = e.currentTarget.nextElementSibling;   
-        var prev = e.currentTarget.previousElementSibling;
+        var prev,next = null;
+
+        if(this.index > 0){
+            prev = childs[this.index-1];
+        }  
+        if(this.index < childs.length-1){
+            next = childs[this.index+1];
+        }  
+        // var next = e.currentTarget.nextElementSibling; 
+        // var prev = e.currentTarget.previousElementSibling;
         let up = false;
         if(e.changedTouches != undefined && e.changedTouches != null){
             this.touchendX = e.changedTouches[0].screenX;
@@ -253,10 +271,9 @@ class ScrollPage {
                         animation: easingAnimation,
                         time: timeAnimation,
                         finish:optionsPage?.finish,
-                        start:optionsPage?.start
-                    });
-                    
-                    
+                        start:optionsPage?.start,
+                        next:false
+                    });  
                 }
          
             }
@@ -276,12 +293,13 @@ class ScrollPage {
                         animation: easingAnimation,
                         time: timeAnimation,
                         finish:optionsPage?.finish,
-                        start:optionsPage?.start
+                        start:optionsPage?.start,
+                        next:true
                     });
-                   
                 }
             }
         }
+
         
     }
 
@@ -322,6 +340,7 @@ class ScrollPage {
         const duration = arguments.length <= 1 || arguments[1] === undefined ? 500 : arguments[1];
         const easing = arguments.length <= 2 || (arguments[2] === undefined || arguments[2] === null) ? 'easeInSine' : arguments[2];
         const callback = arguments[3];
+        const next = arguments[4] ?? null;
         const easings = {
             easeInSine(x) {
                 return 1 - Math.cos(x * Math.PI / 2);
@@ -491,10 +510,20 @@ class ScrollPage {
             if (_this.parent.scrollTop === destinationOffsetToScroll || (easing == "easeInSine" && _this.parent.scrollTop - destinationOffsetToScroll) == 1) {
                 if (callback) {
                     callback();
-                    
                 }
                
                 _this.stop = true;
+                
+                if(next != null){
+                    if(next){
+                        _this.index += 1;
+                    } else {
+                        _this.index -= 1;
+                    }
+                } else {
+                    _this.index = _this.pageIndex(destination);
+                }
+            
                 _this.currentPage = _this.pageNumber();
                 _this.finishCallback(_this.responseCallback());
                 return;
@@ -539,7 +568,6 @@ class ScrollPage {
             i = this.findPageByNode(page);
             target = this.childs[i];
         } else {
-            
             target = document.querySelector(page);
         }
 
@@ -569,7 +597,7 @@ class ScrollPage {
             }
             this.currentTarget = target;
             
-            this.verticalScroll(target, options?.time,options?.animation,options?.finish);
+            this.verticalScroll(target, options?.time,options?.animation,options?.finish,options?.next);
             this.updateMenuClass();
             this.updatePageClass();
 
@@ -577,7 +605,7 @@ class ScrollPage {
             this.parent.dispatchEvent(event);
             
         } else {
-            console.e("page not found");
+            console.log("page not found");
         }
     }
 
