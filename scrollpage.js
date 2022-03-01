@@ -28,12 +28,120 @@ class ScrollPage {
         // },{passive: true}); 
 
         _this.parent = document.querySelector(_this.element);
+        _this.parent.setAttribute('scroll-page', true);
+        _this.parent.style.position = "relative";
         
         _this.childs = [..._this.parent.children];
+
         _this.childs.forEach(e => {
+            e.setAttribute('scroll-page-item', true);
             e.addEventListener('wheel', function (e) {
-                e.preventDefault();
-                _this.scrollListener(e);
+                var currentTarget = e.currentTarget;
+                var scrollPage = true;
+
+                var element = _this.parent;
+                let p = e.target;
+                var hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
+                if (hasVerticalScrollbar) {
+                  
+                    if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && e.deltaY > 0){
+                        scrollPage = true; 
+
+                    //if reach top element and scroll up
+                    } else if((p.scrollTop <= 0) && e.deltaY < 0){
+                        scrollPage = true; 
+                    } else {
+                        scrollPage = false; 
+                        
+                        
+                    }
+                    p = false;
+                    
+                } else {
+                    
+          
+                    while(p){
+                        
+                        hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
+                        if (hasVerticalScrollbar && p !== element && !p.hasAttribute('scroll-page') && !p.hasAttribute('scroll-page-item')) {
+                            //if reach bottom element and scroll down
+                            if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && e.deltaY > 0){
+                                scrollPage = true; 
+    
+                            //if reach top element and scroll up
+                            } else if((p.scrollTop <= 0) && e.deltaY < 0){
+                                scrollPage = true; 
+                            } else {
+                                scrollPage = false; 
+                            }
+                            p = false;
+                            break;
+                        }
+                        p = p.parentElement;
+                    }
+                }
+                
+                
+                // scrollPage = false; 
+                
+                
+                if(currentTarget.hasAttribute('scroll-page-item') && currentTarget.querySelectorAll('[scroll-page]').length > 0){
+                    const nested = currentTarget.querySelectorAll('[scroll-page]');
+                    const firstNested = nested[0];
+                    var top,bottom = false;
+             
+                    
+                    var firstNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
+                   
+                    if(firstNestedHasVerticalScrollbar){
+                        //if reach bottom element and scroll down
+                        if((firstNested.offsetHeight + firstNested.scrollTop >= firstNested.scrollHeight) && e.deltaY > 0){
+                            if(!nested.length){
+                                bottom = true;
+                            }
+
+                        //if reach top element and scroll up
+                        } else if((firstNested.scrollTop-1 <= 0) && e.deltaY < 0){
+                            top = true;
+                        } else {
+                            top = false; 
+                            if(!nested.length){
+                                bottom = false;
+                            }
+                            
+                        }
+                    }
+
+                    if(nested.length > 0){
+                        const lastNested = nested[nested.length-1];
+                    
+                        var lastNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
+                   
+                        if(lastNestedHasVerticalScrollbar){
+                            //if reach bottom element and scroll down
+                            if((lastNested.offsetHeight + lastNested.scrollTop >= lastNested.scrollHeight) && e.deltaY > 0){
+                                bottom = true;
+                            } else {
+                                bottom = false;
+                            }
+                        } else {
+                            bottom = false;
+                        }
+                    }
+
+                    if(top || bottom){
+                        scrollPage = true;
+                    } else {
+                        scrollPage = false;
+                    }
+               }
+
+
+
+                if(scrollPage){
+                    e.preventDefault();
+                    _this.scrollListener(e);
+                }
             }, { passive: options?.passive ?? false });
 
             e.addEventListener('touchstart', function(event) {
@@ -50,6 +158,7 @@ class ScrollPage {
         if(options?.menu){
             _this.setMenu(options?.menu);
         }
+        _this.setTagLink();
         _this.pageSelectedClass = options?.pageSelectedClass ?? 'active';
         _this.menuSelectedClass = options?.menuSelectedClass ?? 'active';
         
@@ -58,12 +167,12 @@ class ScrollPage {
         if(options?.currentPage){
             _this.moveTo(_this.currentPage);
         } else {
-            if(window.pageYOffset <= 1){
+            if(_this.parent.scrollTop <= 1){
                 _this.currentPage = options?.currentPage ?? 1;
                 _this.currentTarget = _this.childs[0];
             } else {
                 _this.childs.forEach(child => {
-                    if(window.pageYOffset == child.offsetTop){
+                    if(_this.parent.scrollTop == child.offsetTop){
                         _this.currentPage = _this.pageNumber(child);
                         _this.currentTarget = child;
                     }
@@ -72,11 +181,9 @@ class ScrollPage {
         }
         _this.nextPage = _this.currentPage;
         _this.nextTarget = _this.currentTarget;
-
-        if(options?.scrollBar){
-            document.body.style.overflow = 'visible';
-        } else {
-            document.body.style.overflow = 'hidden';
+        
+        if(!options?.scrollBar){
+            _this.parent.style.overflow = 'hidden';
         }
 
         _this.updateMenuClass();
@@ -105,7 +212,7 @@ class ScrollPage {
 
     scrollListener(e) {
         const childs = this.childs;
-        var next = e.currentTarget.nextElementSibling;
+        var next = e.currentTarget.nextElementSibling;   
         var prev = e.currentTarget.previousElementSibling;
         let up = false;
         if(e.changedTouches != undefined && e.changedTouches != null){
@@ -359,16 +466,15 @@ class ScrollPage {
             }
         };
         
-        var start = window.pageYOffset;
+        var start = _this.parent.scrollTop;
         var startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
         var parentHeight = Math.max(_this.parent.scrollHeight, _this.parent.offsetHeight, _this.parent.clientHeight, _this.parent.scrollHeight, _this.parent.offsetHeight);
-        var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+        var windowHeight = _this.parent.innerHeight;
         var destinationOffset = typeof destination === 'number' ? destination : destination.offsetTop;
         var destinationOffsetToScroll = parentHeight - destinationOffset < windowHeight ? parentHeight - windowHeight : destinationOffset;
-       
         
         if ('requestAnimationFrame' in window === false) {
-            window.scroll(0, destinationOffsetToScroll);
+            _this.parent.scroll(0, destinationOffsetToScroll);
             if (callback) {
                 callback();
             }
@@ -380,9 +486,9 @@ class ScrollPage {
             var now = 'now' in window.performance ? performance.now() : new Date().getTime();
             var time = Math.min(1, (now - startTime) / duration);
             var timeFunction = easings[easing](time);
-   
-            window.scroll(0, Math.ceil(timeFunction * (destinationOffsetToScroll - start) + start));
-            if (window.pageYOffset === destinationOffsetToScroll || (easing == "easeInSine" && window.pageYOffset - destinationOffsetToScroll) == 1) {
+            _this.parent.scroll(0, Math.ceil(timeFunction * (destinationOffsetToScroll - start) + start));
+            
+            if (_this.parent.scrollTop === destinationOffsetToScroll || (easing == "easeInSine" && _this.parent.scrollTop - destinationOffsetToScroll) == 1) {
                 if (callback) {
                     callback();
                     
@@ -447,9 +553,11 @@ class ScrollPage {
         }
         
         if(target){
+            
             this.nextPage = this.pageNumber(target);
             this.nextTarget = target;
             if(this.stop){
+                
                 this.startCallback(this.responseCallback());
                 
             } else {
@@ -460,12 +568,14 @@ class ScrollPage {
                 options?.start();
             }
             this.currentTarget = target;
+            
             this.verticalScroll(target, options?.time,options?.animation,options?.finish);
             this.updateMenuClass();
             this.updatePageClass();
 
             const event = new Event(this.currentTarget.getAttribute("id"));
             this.parent.dispatchEvent(event);
+            
         } else {
             console.e("page not found");
         }
@@ -491,6 +601,21 @@ class ScrollPage {
         }
 
        
+    }
+
+    setTagLink(){
+        const _this = this;
+        const a = document.getElementsByTagName("a");
+        for (let i = 0; i < a.length; i++) {
+            const link = a[i];
+            link.addEventListener('click',(e)=>{
+                var href = link.getAttribute("href");
+                if(href.includes("#")){
+                    e.preventDefault();
+                    _this.moveTo(href);
+                }
+            });
+        }
     }
 
     findPageByNode(node){
