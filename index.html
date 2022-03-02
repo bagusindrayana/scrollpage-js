@@ -23,23 +23,23 @@
             width: 100%;
             height: 100vh;
             padding: 20px;
+
         }
 
         #main-page .page-item .content {
-            display: flex;
-            width: calc(100% - 40px);
-            height: calc(100vh - 40px);
+            
+            width: calc(100% - 60px);
+            height: calc(100vh - 60px);
+            padding: 10px;
             overflow-y: scroll;
             text-align: center;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            align-content: center;
+           
             background-color: white;
             border: 1px solid black;
         }
 
         #main-page .page-item .content pre {
+            margin: auto;
             text-align: left;
             width: 50%;
         }
@@ -156,6 +156,27 @@ const scrollPage = new ScrollPage("#main-page", {
 });
                     </code>
                 </pre>
+                <p>Or you can make animation with your own formula</p>
+                <pre>
+                    <code class="language-js">
+const scrollPage = new ScrollPage("#main-page", {
+    animation: "easeInQuart",
+    time: 1000,
+    //custom animation each page item (start from page 1)
+    pages: {
+        2: {
+            animation: animation: function(x) {
+                const c1 = 1.70158;
+                const c3 = c1 + 1;
+                
+                return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+            },
+            time: 700
+        },
+    }
+});
+                    </code>
+                </pre>
             </div>
         </div>
 
@@ -213,7 +234,12 @@ scrollPage.on('page3',function(e){
             time: 1000,
             pages: {
                 2: {
-                    animation: "easeOutBack",
+                    animation: function(x) {
+                        const c1 = 1.70158;
+                        const c3 = c1 + 1;
+                        
+                        return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+                    },
                     time: 700
                 },
             }

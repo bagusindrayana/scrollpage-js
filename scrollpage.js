@@ -550,7 +550,7 @@ class ScrollPage {
                 destinationOffsetToScroll = 0;
             } else if(_this.childs.indexOf(_this.currentTarget) == _this.childs.length-1 && _this.index < _this.childs.length-1){
                 last = true;
-                destinationOffsetToScroll = documentHeight;
+                //destinationOffsetToScroll = documentHeight;
             }
             if ('requestAnimationFrame' in window === false) {
                 window.scroll(0, destinationOffsetToScroll);
@@ -561,12 +561,12 @@ class ScrollPage {
                 return;
             }
         }
-        
+
         function scroll() {
             if(_this.options.relative){
                 var now = 'now' in window.performance ? performance.now() : new Date().getTime();
                 var time = Math.min(1, (now - startTime) / duration);
-                var timeFunction = easings[easing](time);
+                var timeFunction = (typeof easing === "function")?easing(time):easings[easing](time);
                 _this.parent.scroll(0, Math.ceil(timeFunction * (destinationOffsetToScroll - start) + start));
 
                 if (_this.parent.scrollTop === destinationOffsetToScroll || (easing == "easeInSine" && _this.parent.scrollTop - destinationOffsetToScroll) == 1) {
@@ -593,7 +593,7 @@ class ScrollPage {
             } else {
                 var now = 'now' in window.performance ? performance.now() : new Date().getTime();
                 var time = Math.min(1, (now - startTime) / duration);
-                var timeFunction = easings[easing](time);
+                var timeFunction = (typeof easing === "function")?easing(time):easings[easing](time);
                 window.scroll(0, Math.ceil(timeFunction * (destinationOffsetToScroll - start) + start));
                 
                 if (window.pageYOffset === destinationOffsetToScroll || (easing == "easeInSine" && window.pageYOffset - destinationOffsetToScroll) == 1 || (last && (window.innerHeight + window.scrollY) >= document.body.offsetHeight)) {
