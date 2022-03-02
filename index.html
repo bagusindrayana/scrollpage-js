@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scrollpage JS</title>
-  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
     <style>
         body {
             margin: 0px;
             padding: 0px;
         }
-        
+
         #main-page {
             width: 100%;
             height: 100vh;
@@ -30,12 +32,17 @@
             width: calc(100% - 40px);
             height: calc(100vh - 40px);
             text-align: center;
-            justify-content: center; 
+            justify-content: center;
             flex-direction: column;
             align-items: center;
             align-content: center;
-            background-color:white; 
+            background-color: white;
             border: 1px solid black;
+        }
+
+        #main-page .page-item .content pre {
+            text-align: left;
+            width: 50%;
         }
 
         #page1 {
@@ -86,153 +93,141 @@
         ul.side-nav li.active {
             border-color: cadetblue;
         }
-
-        #nested-main-page {
-            display: block;
-            width: 100%;
-            overflow-y: scroll;
-            height: 80vh;
-            position: relative;
-        }
-
-        #nested-main-page .nested-page-item {
-            display: block;
-            width: calc(100% - 40px);
-            height: calc(80vh - 40px);
-            padding: 20px;
-            margin: auto;
-            position: relative;
-            
-        }
-
-        #nested-main-page .nested-page-item div {
-            display: block;
-            width: calc(100% - 40px);
-            height: calc(80vh - 40px);
-            margin: auto;
-            justify-content: center; 
-            align-items: center;
-            background-color:white; 
-            border: 1px solid black;
-        }
-
-        #nested-page1 {
-            background-color: rgb(234, 0, 255);
-        }
-
-        #nested-page2 {
-            background-color: rgb(43, 76, 226);
-        }
-
-        #nested-page3 {
-            background-color: rgb(115, 255, 0);
-        }
-
-       
     </style>
 </head>
+
 <body>
-    
+
     <div id="main-page">
-        
+
         <div id="page1" class="page-item">
             <div class="content">
-                <h3>HELLO WORLD</h3>
-                <div style="height: 200px;width: 500px;overflow-y: scroll;">
-                    <h1>Test</h1>
-                    <p>Hublaa</p>
-                    <div style="height: 200px;width: 100%;overflow-y: scroll;">
-                        <h1>Test</h1>
-                        <p>Hublaa</p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eveniet numquam ullam, sunt aperiam esse dolorem dolore itaque enim molestias voluptatum provident nesciunt quisquam quae amet at magni? Illum, ratione.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eveniet numquam ullam, sunt aperiam esse dolorem dolore itaque enim molestias voluptatum provident nesciunt quisquam quae amet at magni? Illum, ratione.
-                    </div>
-                    
-                </div>
-                <a href="#page2">Page 2</a>
+                <h1>ScrollPage.js</h1>
+                <p>Simple full page scroll animation</p>
+                <label>
+                    JS
+                </label>
+                <pre>
+
+                    <code class="language-js">const scrollPage = new ScrollPage("#main-page");</code>
+                </pre>
+                <label>
+                    CSS
+                </label>
+                <pre>
+                    <code class="language-css">
+#main-page {
+    width: 100%;
+}
+
+#main-page .page-item {
+    width: 100%;
+    height: 100vh;
+}
+                    </code>
+                </pre>
+                <label>HTML</label>
+                <pre>
+                    <code class="language-html">
+&lt;div id=&quot;main-page&quot;&gt; 
+    &lt;div class=&quot;page-item&quot; id=&quot;page1&quot;&gt;&lt;/div&gt; 
+    &lt;div class=&quot;page-item&quot; id=&quot;page2&quot;&gt;&lt;/div&gt; 
+    &lt;div class=&quot;page-item&quot; id=&quot;page3&quot;&gt;&lt;/div&gt; 
+&lt;/div&gt;
+                    </code>
+                </pre>
             </div>
         </div>
 
         <div id="page2" class="page-item">
             <div class="content">
-                <h3>KEEP SCROLLING BUD</h3>
-                <div style="height: 200px;width: 200px;overflow-y: scroll;">
-                    <h1>Test</h1>
-                    <p>Hublaa</p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eveniet numquam ullam, sunt aperiam esse dolorem dolore itaque enim molestias voluptatum provident nesciunt quisquam quae amet at magni? Illum, ratione.
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eveniet numquam ullam, sunt aperiam esse dolorem dolore itaque enim molestias voluptatum provident nesciunt quisquam quae amet at magni? Illum, ratione.
-                </div>
+                <h3>Easing Animation</h3>
+                <p>All easing animation from <a href="https://easings.net/">easings.net</a></p>
+                <pre>
+                    <code class="language-js">
+const scrollPage = new ScrollPage("#main-page", {
+    animation: "easeInQuart",
+    time: 1000,
+    //custom animation each page item (start from page 1)
+    pages: {
+        2: {
+            animation: "easeOutBack",
+            time: 700
+        },
+    }
+});
+                    </code>
+                </pre>
             </div>
         </div>
+
         <div id="page3" class="page-item">
             <div class="content">
-                <h3>NESTED SCROLL</h3>
-                <br>
-                <div id="nested-main-page">
-                    <div id="nested1" class="nested-page-item">
-                        <div>
-                            1
-                        </div>
-                    </div>
-                    <div id="nested2" class="nested-page-item">
-                        <div>
-                            2
-                        </div>
-                        <div>
-                            xdxd
-                        </div>
-                    </div>
-                    <div id="nested3" class="nested-page-item">
-                        <div>
-                            3
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="page4" class="page-item">
-            <div class="content">
-                <h3>END</h3>
-                <div style="height: 200px;width: 200px;overflow-y: scroll;">
-                    <h1>Test</h1>
-                    <p>Hublaa</p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eveniet numquam ullam, sunt aperiam esse dolorem dolore itaque enim molestias voluptatum provident nesciunt quisquam quae amet at magni? Illum, ratione.
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem eveniet numquam ullam, sunt aperiam esse dolorem dolore itaque enim molestias voluptatum provident nesciunt quisquam quae amet at magni? Illum, ratione.
-                </div>
+                <h3>Event</h3>
+                <p>Get all progres with event</p>
+                <pre>
+                    <code class="language-js">
+scrollPage.onScroll(function(e){
+    console.log("Leaving from : "+e.currentPageName);//only fire if you keep scroll your mouse wheel
+    console.log("Scroll to : "+e.nextPageName);
+});
+
+scrollPage.onMove(function(e){
+    console.log("Move to : "+e.nextPageName);//will be fired every frame along with the animation (both moving with menu or mouse wheel)
+});
+
+scrollPage.onStart(function(e){
+    console.log("The previous page was : "+e.currentPageName);
+    console.log("The next page is : "+e.nextPageName);
+});
+
+scrollPage.onFinish(function(e){
+    console.log("Arrived at : "+e.currentPageName); //will be have same value as next page because is already arrived/finish
+    console.log("Done Go to : "+e.nextPageName);
+});
+
+scrollPage.on('page3',function(e){
+    console.log("Event on Page 3");
+    
+});
+                    </code>
+                </pre>
             </div>
         </div>
     </div>
 
     <ul class="side-nav">
         <li data-page="#page1">Page 1</li>
-        <li data-page="#page2" >Page 2</li>
-        <li data-page="#page3" >Page 3</li>
-        <li data-page="#page4" >Page 4</li>
+        <li data-page="#page2">Page 2</li>
+        <li data-page="#page3">Page 3</li>
+
     </ul>
 
-<script src="./scrollpage.js"></script>
-<script>
-    const scrollPage = new ScrollPage("#main-page",{
-        menu:"ul.side-nav",
-        animation:"easeInQuart",
-        time:1000,
-        pages:{
-            2:{
-                animation:"easeOutBack",
-                time:700
-            },
-        }
-    });
+    <script src="./scrollpage.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((el) => {
+                hljs.highlightElement(el);
+            });
+        });
+        const scrollPage = new ScrollPage("#main-page", {
+            menu: "ul.side-nav",
+            animation: "easeInQuart",
+            time: 1000,
+            pages: {
+                2: {
+                    animation: "easeOutBack",
+                    time: 700
+                },
+            }
+        });
 
-    const scrollPage2 = new ScrollPage("#nested-main-page",{
-        time:1000,
-    });
 
-    
 
-    
 
-    
-</script>
+
+
+    </script>
 </body>
+
 </html>
