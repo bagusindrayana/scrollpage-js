@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollpage JS</title>
+    <link rel="stylesheet" href="../styles.css">
+    
+</head>
+
+<body>
+    <div id="main-page" class="scroll-page relative">
+        <div class="page-item">
+            <h1>Page 1</h1>
+            <p>Relative is based/realtive on parent height not window height</p>
+            <p>You can use relative mode by change setting "relative" to true and make sure give value to parent height</p>
+            <p>Keep scrolling</p>
+        </div>
+        <div class="page-item" style="overflow: hidden;">
+            <h1>Page 2</h1>
+            <p>Nested scrollpage - currently only work in relative mode</p>
+            <div id="nested-page" class="scroll-page relative">
+                <div class="page-item">
+                    Sub page 1
+                </div>
+                <div class="page-item">
+                    Sub page 2
+                </div>
+            </div>
+        </div>
+        <div class="page-item">
+            <h1>Page 3</h1>
+            <p>End</p>
+        </div>
+    </div>
+
+
+    <script src="../scrollpage.js"></script>
+    <script>
+
+        const scrollPage = new ScrollPage("#main-page", {
+            animation: "easeInQuart",
+            time: 1000,
+            relative:true
+        });
+
+        const nestedPage = new ScrollPage("#nested-page", {
+            relative:true
+        });
+
+
+    </script>
+</body>
+
+</html>

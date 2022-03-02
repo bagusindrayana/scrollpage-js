@@ -1,9 +1,11 @@
 class ScrollPage {
     constructor(element, options = null) {
         const _this = this;
+        _this.reachTop = true;
+        _this.reachBottom = false;
         _this.index = 0;
         _this.element = element;
-        _this.options = options;
+        _this.options = options ?? {};
         if (_this.options.relative === undefined) {
             _this.options.relative = false;
         }
@@ -57,6 +59,8 @@ class ScrollPage {
             }
         });
         _this.childs = childs;
+      
+       
         _this.childs.forEach(e => {
             e.setAttribute('scroll-page-item', true);
             e.addEventListener('wheel', function (e) {
@@ -113,16 +117,17 @@ class ScrollPage {
                     const nested = currentTarget.querySelectorAll('[scroll-page]');
                     const firstNested = nested[0];
                     var top,bottom = false;
-             
+                    
                     
                     var firstNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
                    
                     if(firstNestedHasVerticalScrollbar){
                         //if reach bottom element and scroll down
-                        if((firstNested.offsetHeight + firstNested.scrollTop >= firstNested.scrollHeight) && e.deltaY > 0){
-                            if(!nested.length){
+                        if(((firstNested.offsetHeight + firstNested.scrollTop+_this.marginChild(_this.childs.indexOf(_this.currentTarget))) >= firstNested.scrollHeight) && e.deltaY > 0){
+                            if(nested.length == 1){
                                 bottom = true;
                             }
+                            
 
                         //if reach top element and scroll up
                         } else if((firstNested.scrollTop-1 <= 0) && e.deltaY < 0){
@@ -136,7 +141,7 @@ class ScrollPage {
                         }
                     }
 
-                    if(nested.length > 0){
+                    if(nested.length > 1){
                         const lastNested = nested[nested.length-1];
                     
                         var lastNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
@@ -158,6 +163,7 @@ class ScrollPage {
                     } else {
                         scrollPage = false;
                     }
+                  
                }
 
                
@@ -260,16 +266,17 @@ class ScrollPage {
 
     scrollListener(e) {
         const childs = this.childs;
-        var prev,next = null;
+        // var prev,next = null;
 
-        if(this.index > 0){
-            prev = childs[this.index-1];
-        }  
-        if(this.index < childs.length-1){
-            next = childs[this.index+1];
-        }  
-        // var next = e.currentTarget.nextElementSibling; 
-        // var prev = e.currentTarget.previousElementSibling;
+        // if(this.index > 0){
+        //     prev = childs[this.index-1];
+        // }  
+        // if(this.index < childs.length-1){
+        //     next = childs[this.index+1];
+        // }  
+        
+        var next = e.currentTarget.nextElementSibling; 
+        var prev = e.currentTarget.previousElementSibling;
         let up = false;
         if(e.changedTouches != undefined && e.changedTouches != null){
             this.touchendX = e.changedTouches[0].screenX;
@@ -521,13 +528,21 @@ class ScrollPage {
                     : (1 + easings["easeOutBounce"](2 * x - 1)) / 2;
             }
         };
+        var last = false;
         if(_this.options.relative){
             var start = _this.parent.scrollTop;
             var startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
             var parentHeight = Math.max(_this.parent.scrollHeight, _this.parent.offsetHeight, _this.parent.clientHeight, _this.parent.scrollHeight, _this.parent.offsetHeight);
             var windowHeight = _this.parent.innerHeight;
             var destinationOffset = typeof destination === 'number' ? destination : destination.offsetTop;
+            destinationOffset -= this.marginChild(_this.childs.indexOf(_this.currentTarget));
             var destinationOffsetToScroll = parentHeight - destinationOffset < windowHeight ? parentHeight - windowHeight : destinationOffset;
+            if(_this.childs.indexOf(_this.currentTarget) == 0 && _this.index > 0){
+                destinationOffsetToScroll = 0;
+            } else if(_this.childs.indexOf(_this.currentTarget) == _this.childs.length-1 && _this.index < _this.childs.length-1){
+                last = true;
+                //destinationOffsetToScroll = documentHeight;
+            }
             
             if ('requestAnimationFrame' in window === false) {
                 _this.parent.scroll(0, destinationOffsetToScroll);
@@ -538,12 +553,13 @@ class ScrollPage {
                 return;
             }
         } else {
-            var last = false;
+           
             var start = window.pageYOffset;
             var startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
             var documentHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
             var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
             var destinationOffset = typeof destination === 'number' ? destination : destination.offsetTop;
+            destinationOffset -= this.marginChild(_this.childs.indexOf(_this.currentTarget));
             var destinationOffsetToScroll = Math.round(documentHeight - destinationOffset < windowHeight ? documentHeight - windowHeight : destinationOffset);
            
             if(_this.childs.indexOf(_this.currentTarget) == 0 && _this.index > 0){
@@ -568,8 +584,9 @@ class ScrollPage {
                 var time = Math.min(1, (now - startTime) / duration);
                 var timeFunction = (typeof easing === "function")?easing(time):easings[easing](time);
                 _this.parent.scroll(0, Math.ceil(timeFunction * (destinationOffsetToScroll - start) + start));
+                
 
-                if (_this.parent.scrollTop === destinationOffsetToScroll || (easing == "easeInSine" && _this.parent.scrollTop - destinationOffsetToScroll) == 1) {
+                if (_this.parent.scrollTop === destinationOffsetToScroll || (easing == "easeInSine" && _this.parent.scrollTop - destinationOffsetToScroll) == 1 || time == 1) {
                     if (callback) {
                         callback();
                     }
@@ -596,7 +613,7 @@ class ScrollPage {
                 var timeFunction = (typeof easing === "function")?easing(time):easings[easing](time);
                 window.scroll(0, Math.ceil(timeFunction * (destinationOffsetToScroll - start) + start));
                 
-                if (window.pageYOffset === destinationOffsetToScroll || (easing == "easeInSine" && window.pageYOffset - destinationOffsetToScroll) == 1 || (last && (window.innerHeight + window.scrollY) >= document.body.offsetHeight)) {
+                if (window.pageYOffset === destinationOffsetToScroll || (easing == "easeInSine" && window.pageYOffset - destinationOffsetToScroll) == 1 || (last && (window.innerHeight + window.scrollY) >= document.body.offsetHeight) || time == 1) {
                     if (callback) {
                         callback();
                     }
@@ -675,6 +692,7 @@ class ScrollPage {
         }
         
         if(target){
+            
             this.nextPage = this.pageNumber(target);
             this.nextTarget = target;
             if(this.stop){
@@ -762,7 +780,55 @@ class ScrollPage {
 
         return datas;
     }
+
+    marginChild(index){
+        return this.convertCssUnit(window.getComputedStyle(this.childs[index]).marginTop);
+    }
+
+    convertCssUnit = function( cssValue, target ) {
+
+        target = target || document.body;
+    
+        const supportedUnits = {
+    
+            // Absolute sizes
+            'px': value => value,
+            'cm': value => value * 38,
+            'mm': value => value * 3.8,
+            'q': value => value * 0.95,
+            'in': value => value * 96,
+            'pc': value => value * 16,
+            'pt': value => value * 1.333333,
+    
+            // Relative sizes
+            'rem': value => value * parseFloat( getComputedStyle( document.documentElement ).fontSize ),
+            'em': value => value * parseFloat( getComputedStyle( target ).fontSize ),
+            'vw': value => value / 100 * window.innerWidth,
+            'vh': value => value / 100 * window.innerHeight,
+    
+        };
+    
+        // Match positive and negative numbers including decimals with following unit
+        const pattern = new RegExp( `^([\-\+]?(?:\\d+(?:\\.\\d+)?))(${ Object.keys( supportedUnits ).join( '|' ) })$`, 'i' );
+    
+        // If is a match, return example: [ "-2.75rem", "-2.75", "rem" ]
+        const matches = String.prototype.toString.apply( cssValue ).trim().match( pattern );
+    
+        if ( matches ) {
+            const value = Number( matches[ 1 ] );
+            const unit = matches[ 2 ].toLocaleLowerCase();
+    
+            // Sanity check, make sure unit conversion function exists
+            if ( unit in supportedUnits ) {
+                return supportedUnits[ unit ]( value );
+            }
+        }
+    
+        return cssValue;
+    
+    }
 };
+
 
 
 if(typeof module != "undefined"){

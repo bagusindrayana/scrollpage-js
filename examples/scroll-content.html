@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollpage JS</title>
+    <link rel="stylesheet" href="../styles.css">
+    
+</head>
+
+<body>
+    <div id="main-page" class="scroll-page ">
+
+        <div class="page-item">
+            <h1>Page 1</h1>
+            <p>Scroll content</p>
+            <div style="height: 200px;width: 300px;overflow-y: scroll;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, unde repudiandae cumque adipisci soluta labore blanditiis nihil neque perferendis error cum cupiditate est nisi laboriosam, dolores quae. Explicabo, nam doloremque?
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. In modi, ducimus quisquam aut illo beatae non harum ab ipsum laborum, sapiente exercitationem optio dolore repudiandae, dolores rerum sequi soluta nesciunt!
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, explicabo consectetur, sed et unde accusantium dolore vitae voluptatem voluptatibus animi incidunt error? Fuga nostrum nesciunt omnis neque animi non consequuntur?
+            </div>
+        </div>
+        <div class="page-item" >
+            <h1>Page 2</h1>
+            <p style="height: 300px;width: 300px;overflow-y: scroll;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi veritatis quasi pariatur voluptas aliquid quia soluta quaerat ipsum possimus tempora temporibus asperiores eos corrupti ab, id neque vero excepturi repellendus.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, quam corporis! Similique harum nisi quasi fugit sunt nam nostrum pariatur a sit aliquid autem id aperiam minus, dolores labore architecto?
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis corrupti atque alias quos? Dicta, voluptate dolor. Aliquam provident fugiat molestias doloribus consequuntur voluptates qui unde. Quaerat qui quia sunt blanditiis.
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Amet atque facilis beatae unde esse voluptates aliquam cupiditate vel reprehenderit rem reiciendis sunt, adipisci nulla eius odio veritatis quibusdam ducimus error?
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis eius optio quasi nam ex ipsum minus possimus beatae, delectus aliquid, pariatur, voluptas corrupti. Quisquam, cumque dolore quidem accusamus dolorem accusantium.
+            </p>
+        </div>
+        <div class="page-item" >
+            <h1>Page 3</h1>
+            <p style="height: 200px;width: 300px;overflow: scroll;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi veritatis quasi pariatur voluptas aliquid quia soluta quaerat ipsum possimus tempora temporibus asperiores eos corrupti ab, id neque vero excepturi repellendus.
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque, adipisci! Nesciunt aperiam aliquid accusantium possimus eligendi? Assumenda deserunt vero laboriosam at. Libero sed laborum non odit error, corrupti totam perferendis?
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, molestias dicta fuga voluptas at ducimus rem voluptates quia debitis blanditiis numquam, eaque explicabo deleniti, neque in recusandae autem dolorum aut.
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique odit ea quae repellat, porro quod voluptatum mollitia repellendus impedit aliquid minima libero, dicta necessitatibus, aut harum vitae expedita. Iusto, sequi.
+            </p>
+        </div>
+        
+    </div>
+
+
+    <script src="../scrollpage.js"></script>
+    <script>
+
+        const scrollPage = new ScrollPage("#main-page", {
+            animation: "easeInQuart",
+            time: 1000,
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollpage JS</title>
+    <link rel="stylesheet" href="../styles.css">
+    
+</head>
+
+<body>
+    <div id="main-page" class="scroll-page">
+
+        <div class="page-item" style="height: 200px;">
+            <h1>Page 1</h1>
+            <p>Dynamic height</p>
+            
+        </div>
+        <div class="page-item" style="height: 200px;">
+            <h1>Page 2</h1>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi veritatis quasi pariatur voluptas aliquid quia soluta quaerat ipsum possimus tempora temporibus asperiores eos corrupti ab, id neque vero excepturi repellendus.
+            </p>
+        </div>
+        <div class="page-item" style="height: 400px;">
+            <h1>Page 3</h1>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi veritatis quasi pariatur voluptas aliquid quia soluta quaerat ipsum possimus tempora temporibus asperiores eos corrupti ab, id neque vero excepturi repellendus.
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque, adipisci! Nesciunt aperiam aliquid accusantium possimus eligendi? Assumenda deserunt vero laboriosam at. Libero sed laborum non odit error, corrupti totam perferendis?
+            </p>
+        </div>
+        <div class="page-item" style="height: 300px;">
+            <h1>Page 4</h1>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi veritatis quasi pariatur voluptas aliquid quia soluta quaerat ipsum possimus tempora temporibus asperiores eos corrupti ab, id neque vero excepturi repellendus.
+            </p>
+        </div>
+        <div class="page-item" style="height: 500px;">
+            <h1>Page 5</h1>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi veritatis quasi pariatur voluptas aliquid quia soluta quaerat ipsum possimus tempora temporibus asperiores eos corrupti ab, id neque vero excepturi repellendus.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem consequuntur aliquid ducimus omnis recusandae sapiente impedit harum ab facilis facere mollitia sequi quia sint vitae, labore commodi hic neque quaerat.
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consequatur aspernatur perspiciatis assumenda culpa minus optio sed alias! Neque amet quam ullam placeat in, recusandae magnam dicta quae necessitatibus perferendis quaerat?
+            </p>
+        </div>
+    </div>
+
+
+    <script src="../scrollpage.js"></script>
+    <script>
+
+        const scrollPage = new ScrollPage("#main-page", {
+            animation: "easeInQuart",
+            time: 1000,
+        });
+    </script>
+</body>
+
+</html>
