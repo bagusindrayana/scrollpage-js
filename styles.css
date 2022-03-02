@@ -1,0 +1,15 @@
+#main-page {
+    width: 100%;
+}
+
+#main-page.relative {
+    width: 100%;
+    overflow-y:scroll;
+    height: 100vh;
+}
+
+#main-page .page-item {
+    display: block;
+    width: 100%;
+    height: 100vh;
+}
