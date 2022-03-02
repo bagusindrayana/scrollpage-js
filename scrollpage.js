@@ -1,6 +1,7 @@
 class ScrollPage {
     constructor(element, options = null) {
         const _this = this;
+        _this.index = 0;
         _this.element = element;
         _this.options = options;
         if (_this.options.relative === undefined) {
@@ -159,7 +160,7 @@ class ScrollPage {
                     }
                }
 
-
+               
 
                 if(scrollPage){
                     e.preventDefault();
@@ -292,7 +293,6 @@ class ScrollPage {
                 up = false;
             }
         }
-
         
         if (up) {
             if (childs.includes(prev)) {
@@ -521,7 +521,6 @@ class ScrollPage {
                     : (1 + easings["easeOutBounce"](2 * x - 1)) / 2;
             }
         };
-        
         if(_this.options.relative){
             var start = _this.parent.scrollTop;
             var startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
@@ -539,13 +538,20 @@ class ScrollPage {
                 return;
             }
         } else {
+            var last = false;
             var start = window.pageYOffset;
             var startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
             var documentHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
             var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
             var destinationOffset = typeof destination === 'number' ? destination : destination.offsetTop;
             var destinationOffsetToScroll = Math.round(documentHeight - destinationOffset < windowHeight ? documentHeight - windowHeight : destinationOffset);
-
+           
+            if(_this.childs.indexOf(_this.currentTarget) == 0 && _this.index > 0){
+                destinationOffsetToScroll = 0;
+            } else if(_this.childs.indexOf(_this.currentTarget) == _this.childs.length-1 && _this.index < _this.childs.length-1){
+                last = true;
+                destinationOffsetToScroll = documentHeight;
+            }
             if ('requestAnimationFrame' in window === false) {
                 window.scroll(0, destinationOffsetToScroll);
                 if (callback) {
@@ -556,9 +562,7 @@ class ScrollPage {
             }
         }
         
-    
         function scroll() {
-           
             if(_this.options.relative){
                 var now = 'now' in window.performance ? performance.now() : new Date().getTime();
                 var time = Math.min(1, (now - startTime) / duration);
@@ -591,8 +595,8 @@ class ScrollPage {
                 var time = Math.min(1, (now - startTime) / duration);
                 var timeFunction = easings[easing](time);
                 window.scroll(0, Math.ceil(timeFunction * (destinationOffsetToScroll - start) + start));
-
-                if (window.pageYOffset === destinationOffsetToScroll) {
+                
+                if (window.pageYOffset === destinationOffsetToScroll || (easing == "easeInSine" && window.pageYOffset - destinationOffsetToScroll) == 1 || (last && (window.innerHeight + window.scrollY) >= document.body.offsetHeight)) {
                     if (callback) {
                         callback();
                     }
@@ -604,6 +608,7 @@ class ScrollPage {
                         } else {
                             _this.index -= 1;
                         }
+                        
                     } else {
                         _this.index = _this.pageIndex(destination);
                     }
@@ -670,7 +675,6 @@ class ScrollPage {
         }
         
         if(target){
-            
             this.nextPage = this.pageNumber(target);
             this.nextTarget = target;
             if(this.stop){
