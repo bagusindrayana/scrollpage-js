@@ -23,17 +23,17 @@
             width: 100%;
             height: 100vh;
             padding: 20px;
-
+            
         }
 
         #main-page .page-item .content {
             
             width: calc(100% - 60px);
-            height: calc(100vh - 60px);
+            height: calc(100% - 60px);
             padding: 10px;
             overflow-y: scroll;
             text-align: center;
-           
+            position: relative;
             background-color: white;
             border: 1px solid black;
         }
@@ -96,11 +96,12 @@
 </head>
 
 <body>
+    <h1><center>ScrollPage.js</center></h1>
     <div id="main-page">
         
-        <div id="page1" class="page-item">
-            <div class="content">
-                <h1>ScrollPage.js</h1>
+        <div id="page1" class="page-item" style="height: calc(100vh - 100px);">
+            <div class="content" >
+                
                 <p>Simple full page scroll animation</p>
                 <label>
                     JS
@@ -180,8 +181,8 @@ const scrollPage = new ScrollPage("#main-page", {
             </div>
         </div>
 
-        <div id="page3" class="page-item">
-            <div class="content">
+        <div id="page3" class="page-item" style="height: calc(100vh - 100px);">
+            <div class="content" >
                 <h3>Event</h3>
                 <p>Get all progres with event</p>
                 <pre>
@@ -220,6 +221,10 @@ scrollPage.on('page3',function(e){
         <li data-page="#page3">Page 3</li>
 
     </ul>
+
+    <center>
+        <h3><a href="https://github.com/bagusindrayana/scrollpage-js">Github</a></h3>
+    </center>
 
     <script src="./scrollpage.js"></script>
     <script>

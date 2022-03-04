@@ -64,120 +64,19 @@ class ScrollPage {
         _this.childs.forEach(e => {
             e.setAttribute('scroll-page-item', true);
             e.addEventListener('wheel', function (e) {
-                var currentTarget = e.currentTarget;
-                var scrollPage = true;
-
-                var element = _this.parent;
-                let p = e.target;
-                var hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
-                if (hasVerticalScrollbar) {
-                  
-                    if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && e.deltaY > 0){
-                        scrollPage = true; 
-
-                    //if reach top element and scroll up
-                    } else if((p.scrollTop <= 0) && e.deltaY < 0){
-                        scrollPage = true; 
-                    } else {
-                        scrollPage = false;                      
-                    }
-                    p = false;
-                    
-                } else {
-                    
-          
-                    while(p){
-                        if(p.nodeName == "BODY"){
-                            break;
-                        }
-                        hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
-                        if (hasVerticalScrollbar && p !== element && !p.hasAttribute('scroll-page') && !p.hasAttribute('scroll-page-item')) {
-                            //if reach bottom element and scroll down
-                            if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && e.deltaY > 0){
-                                scrollPage = true; 
-    
-                            //if reach top element and scroll up
-                            } else if((p.scrollTop <= 0) && e.deltaY < 0){
-                                scrollPage = true; 
-                            } else {
-                                scrollPage = false; 
-                            }
-                            p = false;
-                            break;
-                        }
-                        p = p.parentElement;
-                    }
-                }
-                
-                
-                // scrollPage = false; 
-                
-                
-                if(currentTarget.hasAttribute('scroll-page-item') && currentTarget.querySelectorAll('[scroll-page]').length > 0){
-                    const nested = currentTarget.querySelectorAll('[scroll-page]');
-                    const firstNested = nested[0];
-                    var top,bottom = false;
-                    
-                    
-                    var firstNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
-                   
-                    if(firstNestedHasVerticalScrollbar){
-                        //if reach bottom element and scroll down
-                        if(((firstNested.offsetHeight + firstNested.scrollTop+_this.marginChild(_this.childs.indexOf(_this.currentTarget))) >= firstNested.scrollHeight) && e.deltaY > 0){
-                            if(nested.length == 1){
-                                bottom = true;
-                            }
-                            
-
-                        //if reach top element and scroll up
-                        } else if((firstNested.scrollTop-1 <= 0) && e.deltaY < 0){
-                            top = true;
-                        } else {
-                            top = false; 
-                            if(!nested.length){
-                                bottom = false;
-                            }
-                            
-                        }
-                    }
-
-                    if(nested.length > 1){
-                        const lastNested = nested[nested.length-1];
-                    
-                        var lastNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
-                   
-                        if(lastNestedHasVerticalScrollbar){
-                            //if reach bottom element and scroll down
-                            if((lastNested.offsetHeight + lastNested.scrollTop >= lastNested.scrollHeight) && e.deltaY > 0){
-                                bottom = true;
-                            } else {
-                                bottom = false;
-                            }
-                        } else {
-                            bottom = false;
-                        }
-                    }
-
-                    if(top || bottom){
-                        scrollPage = true;
-                    } else {
-                        scrollPage = false;
-                    }
-                  
-               }
-
-               
-
-                if(scrollPage){
+                if(_this.checkScrollContent(e)){
                     e.preventDefault();
                     _this.scrollListener(e);
                 }
             }, { passive: options?.passive ?? false });
 
             e.addEventListener('touchstart', function(event) {
-                event.preventDefault();
-                _this.touchstartX = event.changedTouches[0].screenX;
-                _this.touchstartY = event.changedTouches[0].screenY;
+                if(_this.checkScrollContent(event)){
+                    event.preventDefault();
+                    _this.touchstartX = event.changedTouches[0].screenX;
+                    _this.touchstartY = event.changedTouches[0].screenY;
+                }
+                
             },{passive: false});
         
             e.addEventListener('touchend', function(event) {
@@ -199,27 +98,52 @@ class ScrollPage {
         } else {
             //check current scroll position
             if(!_this.options.relative){
+                var childOffset = [];
+
+                
                 _this.childs.forEach(child => {
-                    if(window.pageYOffset == child.offsetTop){
-                        _this.currentPage = _this.pageNumber(child);
-                        _this.index = _this.pageIndex(child);
-                        _this.currentTarget = child;
-                    }
+                    childOffset.push(child.offsetTop);
+                    // if(window.pageYOffset <= child.offsetTop){
+                    //     _this.currentPage = _this.pageNumber(child);
+                    //     _this.index = _this.pageIndex(child);
+                    //     _this.currentTarget = child;
+                    // }
                 });
+                
+                var pageOffset = window.pageYOffset;
+                var closest = childOffset.reduce(function(prev, curr) {
+                    return (Math.abs(curr - pageOffset) < Math.abs(prev - pageOffset) ? curr : prev);
+                });
+
+                var index = childOffset.indexOf(closest);
+                var child = _this.childs[index];
+                _this.currentPage = _this.pageNumber(child);
+                _this.index = index;
+                _this.currentTarget = child;
             } else {
                 if(_this.parent.scrollTop <= 1){
                     _this.currentPage = options?.currentPage ?? 1;
                     _this.currentTarget = _this.childs[0];
                     _this.index = 0;
                 } else {
+                    var childOffset = [];
+
                     _this.childs.forEach(child => {
-                        if(_this.parent.scrollTop == child.offsetTop){
-                            _this.currentPage = _this.pageNumber(child);
-                            _this.index = _this.pageIndex(child);
-                            _this.currentTarget = child;
-                        }
+                        childOffset.push(child.offsetTop);
                     });
+                    
+                    var pageOffset = _this.parent.scrollTop;
+                    var closest = childOffset.reduce(function(prev, curr) {
+                        return (Math.abs(curr - pageOffset) < Math.abs(prev - pageOffset) ? curr : prev);
+                    });
+
+                    var index = childOffset.indexOf(closest);
+                    var child = _this.childs[index];
+                    _this.currentPage = _this.pageNumber(child);
+                    _this.index = index;
+                    _this.currentTarget = child;
                 }
+               
             }
             
         }
@@ -239,9 +163,115 @@ class ScrollPage {
                 _this.parent.style.overflow = 'hidden';
             }
         }
-
         _this.updateMenuClass();
         _this.updatePageClass();
+    }
+
+    checkScrollContent(e){
+        var _this = this;
+        var currentTarget = e.currentTarget;
+        var scrollPage = true;
+
+        var element = _this.parent;
+        let p = e.target;
+        var hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
+        if (hasVerticalScrollbar) {
+            
+            if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && e.deltaY > 0){
+                scrollPage = true; 
+
+            //if reach top element and scroll up
+            } else if((p.scrollTop <= 0) && e.deltaY < 0){
+                scrollPage = true; 
+            } else {
+                scrollPage = false;                      
+            }
+            p = false;
+            
+        } else {
+            
+
+            while(p){
+                if(p.nodeName == "BODY"){
+                    break;
+                }
+                hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
+                if (hasVerticalScrollbar && p !== element && !p.hasAttribute('scroll-page') && !p.hasAttribute('scroll-page-item')) {
+                    //if reach bottom element and scroll down
+                    if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && e.deltaY > 0){
+                        scrollPage = true; 
+
+                    //if reach top element and scroll up
+                    } else if((p.scrollTop <= 0) && e.deltaY < 0){
+                        scrollPage = true; 
+                    } else {
+                        scrollPage = false; 
+                    }
+                    p = false;
+                    break;
+                }
+                p = p.parentElement;
+            }
+        }
+        
+        
+        // scrollPage = false; 
+        
+        
+        if(currentTarget.hasAttribute('scroll-page-item') && currentTarget.querySelectorAll('[scroll-page]').length > 0){
+            const nested = currentTarget.querySelectorAll('[scroll-page]');
+            const firstNested = nested[0];
+            var top,bottom = false;
+            
+            
+            var firstNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
+            
+            if(firstNestedHasVerticalScrollbar){
+                //if reach bottom element and scroll down
+                if(((firstNested.offsetHeight + firstNested.scrollTop+_this.marginChild(_this.childs.indexOf(_this.currentTarget))) >= firstNested.scrollHeight) && e.deltaY > 0){
+                    if(nested.length == 1){
+                        bottom = true;
+                    }
+                    
+
+                //if reach top element and scroll up
+                } else if((firstNested.scrollTop-1 <= 0) && e.deltaY < 0){
+                    top = true;
+                } else {
+                    top = false; 
+                    if(!nested.length){
+                        bottom = false;
+                    }
+                    
+                }
+            }
+
+            if(nested.length > 1){
+                const lastNested = nested[nested.length-1];
+            
+                var lastNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
+            
+                if(lastNestedHasVerticalScrollbar){
+                    //if reach bottom element and scroll down
+                    if((lastNested.offsetHeight + lastNested.scrollTop >= lastNested.scrollHeight) && e.deltaY > 0){
+                        bottom = true;
+                    } else {
+                        bottom = false;
+                    }
+                } else {
+                    bottom = false;
+                }
+            }
+
+            if(top || bottom){
+                scrollPage = true;
+            } else {
+                scrollPage = false;
+            }
+            
+        }
+
+        return scrollPage;
     }
 
     initEvents(){
@@ -266,17 +296,17 @@ class ScrollPage {
 
     scrollListener(e) {
         const childs = this.childs;
-        // var prev,next = null;
+        var prev,next = null;
 
-        // if(this.index > 0){
-        //     prev = childs[this.index-1];
-        // }  
-        // if(this.index < childs.length-1){
-        //     next = childs[this.index+1];
-        // }  
+        if(this.index > 0){
+            prev = childs[this.index-1];
+        }  
+        if(this.index < childs.length-1){
+            next = childs[this.index+1];
+        }  
         
-        var next = e.currentTarget.nextElementSibling; 
-        var prev = e.currentTarget.previousElementSibling;
+        // var next = e.currentTarget.nextElementSibling; 
+        // var prev = e.currentTarget.previousElementSibling;
         let up = false;
         if(e.changedTouches != undefined && e.changedTouches != null){
             this.touchendX = e.changedTouches[0].screenX;
@@ -566,7 +596,7 @@ class ScrollPage {
                 destinationOffsetToScroll = 0;
             } else if(_this.childs.indexOf(_this.currentTarget) == _this.childs.length-1 && _this.index < _this.childs.length-1){
                 last = true;
-                //destinationOffsetToScroll = documentHeight;
+                destinationOffsetToScroll = documentHeight;
             }
             if ('requestAnimationFrame' in window === false) {
                 window.scroll(0, destinationOffsetToScroll);
@@ -613,7 +643,7 @@ class ScrollPage {
                 var timeFunction = (typeof easing === "function")?easing(time):easings[easing](time);
                 window.scroll(0, Math.ceil(timeFunction * (destinationOffsetToScroll - start) + start));
                 
-                if (window.pageYOffset === destinationOffsetToScroll || (easing == "easeInSine" && window.pageYOffset - destinationOffsetToScroll) == 1 || (last && (window.innerHeight + window.scrollY) >= document.body.offsetHeight) || time == 1) {
+                if (window.pageYOffset === destinationOffsetToScroll || (easing == "easeInSine" && window.pageYOffset - destinationOffsetToScroll) == 1 || time == 1) {
                     if (callback) {
                         callback();
                     }
