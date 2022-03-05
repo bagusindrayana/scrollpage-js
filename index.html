@@ -23,11 +23,13 @@
             width: calc(100% - 20px);
             height: calc(100vh - 20px);
             padding: 20px;
+            margin: auto;
             
         }
 
         #main-page .page-item .content {
-            
+            display: block;
+            margin: auto;
             width: calc(100% - 60px);
             height: calc(100% - 60px);
             padding: 10px;
@@ -100,7 +102,14 @@
         @media only screen and (max-width: 768px) {
             /* For mobile phones: */
             #main-page .page-item .content pre {
-                width: 80%;
+                width: 85%;
+            }
+
+            #main-page .page-item {
+
+                width: calc(100% - 40px);
+        
+                
             }
 
             ul.side-nav {
