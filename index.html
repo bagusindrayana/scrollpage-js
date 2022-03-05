@@ -265,7 +265,10 @@ scrollPage.on('page3',function(e){
             document.querySelectorAll('pre code').forEach((el) => {
                 hljs.highlightElement(el);
             });
-            TouchEmulator();
+            if(typeof TouchEmulator() !== "undefined"){
+                TouchEmulator();
+            }
+            
         });
         const scrollPage = new ScrollPage("#main-page", {
             menu: "ul.side-nav",
