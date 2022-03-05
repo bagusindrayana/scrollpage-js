@@ -71,12 +71,13 @@ class ScrollPage {
             }, { passive: options?.passive ?? false });
 
             e.addEventListener('touchstart', function(event) {
+                
                 if(_this.checkScrollContent(event)){
                     event.preventDefault();
-                    _this.touchstartX = event.changedTouches[0].screenX;
-                    _this.touchstartY = event.changedTouches[0].screenY;
-                }
-                
+                    
+                }  
+                _this.touchstartX = event.changedTouches[0].screenX;
+                _this.touchstartY = event.changedTouches[0].screenY;  
             },{passive: false});
         
             e.addEventListener('touchend', function(event) {
@@ -173,17 +174,17 @@ class ScrollPage {
         var _this = this;
         var currentTarget = e.currentTarget;
         var scrollPage = true;
+        let up = false;
+        up = this.moveDownOrUp(e);
 
         var element = _this.parent;
         let p = e.target;
         var hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
         if (hasVerticalScrollbar) {
-            
-            if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && e.deltaY > 0){
+            if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && !up){
                 scrollPage = true; 
-
             //if reach top element and scroll up
-            } else if((p.scrollTop <= 0) && e.deltaY < 0){
+            } else if((p.scrollTop <= 0) && up){
                 scrollPage = true; 
             } else {
                 scrollPage = false;                      
@@ -199,12 +200,14 @@ class ScrollPage {
                 }
                 hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
                 if (hasVerticalScrollbar && p !== element && !p.hasAttribute('scroll-page') && !p.hasAttribute('scroll-page-item')) {
+                    
                     //if reach bottom element and scroll down
-                    if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && e.deltaY > 0){
+                    if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && !up){
                         scrollPage = true; 
-
+                        
                     //if reach top element and scroll up
-                    } else if((p.scrollTop <= 0) && e.deltaY < 0){
+                    } else if((p.scrollTop <= 0) && up){
+                        
                         scrollPage = true; 
                     } else {
                         scrollPage = false; 
@@ -230,14 +233,14 @@ class ScrollPage {
             
             if(firstNestedHasVerticalScrollbar){
                 //if reach bottom element and scroll down
-                if(((firstNested.offsetHeight + firstNested.scrollTop+_this.marginChild(_this.childs.indexOf(_this.currentTarget))) >= firstNested.scrollHeight) && e.deltaY > 0){
+                if(((firstNested.offsetHeight + firstNested.scrollTop+_this.marginChild(_this.childs.indexOf(_this.currentTarget))) >= firstNested.scrollHeight) && !up){
                     if(nested.length == 1){
                         bottom = true;
                     }
                     
 
                 //if reach top element and scroll up
-                } else if((firstNested.scrollTop-1 <= 0) && e.deltaY < 0){
+                } else if((firstNested.scrollTop-1 <= 0) && up){
                     top = true;
                 } else {
                     top = false; 
@@ -255,7 +258,7 @@ class ScrollPage {
             
                 if(lastNestedHasVerticalScrollbar){
                     //if reach bottom element and scroll down
-                    if((lastNested.offsetHeight + lastNested.scrollTop >= lastNested.scrollHeight) && e.deltaY > 0){
+                    if((lastNested.offsetHeight + lastNested.scrollTop >= lastNested.scrollHeight) && up){
                         bottom = true;
                     } else {
                         bottom = false;
@@ -296,20 +299,8 @@ class ScrollPage {
         return this.pageIndex(element ?? this.currentTarget)+1;
     }
 
-    scrollListener(e) {
-        const childs = this.childs;
-        var prev,next = null;
-
-        if(this.index > 0){
-            prev = childs[this.index-1];
-        }  
-        if(this.index < childs.length-1){
-            next = childs[this.index+1];
-        }  
-        
-        // var next = e.currentTarget.nextElementSibling; 
-        // var prev = e.currentTarget.previousElementSibling;
-        let up = false;
+    moveDownOrUp(e){
+        var up = false;
         if(e.changedTouches != undefined && e.changedTouches != null){
             this.touchendX = e.changedTouches[0].screenX;
             this.touchendY = e.changedTouches[0].screenY;
@@ -332,6 +323,24 @@ class ScrollPage {
                 up = false;
             }
         }
+        return up;
+    }
+
+    scrollListener(e) {
+        const childs = this.childs;
+        var prev,next = null;
+
+        if(this.index > 0){
+            prev = childs[this.index-1];
+        }  
+        if(this.index < childs.length-1){
+            next = childs[this.index+1];
+        }  
+        
+        // var next = e.currentTarget.nextElementSibling; 
+        // var prev = e.currentTarget.previousElementSibling;
+        let up = false;
+        up = this.moveDownOrUp(e);
         
         if (up) {
             if (childs.includes(prev)) {
@@ -376,7 +385,7 @@ class ScrollPage {
             }
         }
 
-        
+        this.updateMenuClass();
     }
 
     updateMenuClass(){

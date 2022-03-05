@@ -259,11 +259,13 @@ scrollPage.on('page3',function(e){
     </center>
 
     <script src="./scrollpage.js"></script>
+    <script src="/node_modules/hammer-touchemulator/touch-emulator.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             document.querySelectorAll('pre code').forEach((el) => {
                 hljs.highlightElement(el);
             });
+            TouchEmulator();
         });
         const scrollPage = new ScrollPage("#main-page", {
             menu: "ul.side-nav",

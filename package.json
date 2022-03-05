@@ -14,5 +14,8 @@
         "url": "https://github.com/bagusindrayana/scrollpage-js/issues"
     },
     "homepage": "https://github.com/bagusindrayana/scrollpage-js",
-    "main":"scrollpage.js"
+    "main": "scrollpage.js",
+    "dependencies": {
+        "hammer-touchemulator": "^0.0.2"
+    }
 }
