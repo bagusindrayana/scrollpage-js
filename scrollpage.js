@@ -71,9 +71,12 @@ class ScrollPage {
             }, { passive: options?.passive ?? false });
 
             e.addEventListener('touchstart', function(event) {
-                event.preventDefault();
-                _this.touchstartX = event.changedTouches[0].screenX;
-                _this.touchstartY = event.changedTouches[0].screenY;
+                if(_this.checkScrollContent(event)){
+                    event.preventDefault();
+                    _this.touchstartX = event.changedTouches[0].screenX;
+                    _this.touchstartY = event.changedTouches[0].screenY;
+                }
+                
             },{passive: false});
         
             e.addEventListener('touchend', function(event) {
