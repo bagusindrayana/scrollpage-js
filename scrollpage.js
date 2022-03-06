@@ -10,6 +10,10 @@ class ScrollPage {
             _this.options.relative = false;
         }
 
+        if (_this.options.triggerScrollChildren === undefined) {
+            _this.options.triggerScrollChildren = false;
+        }
+
         _this.initEvents();
         // document.querySelector(element).addEventListener('wheel', function (e) {
         //     e.preventDefault();
@@ -186,14 +190,19 @@ class ScrollPage {
         let p = e.target;
         var hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
         if (hasVerticalScrollbar) {
-            if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && !up){
-                scrollPage = true; 
-            //if reach top element and scroll up
-            } else if((p.scrollTop <= 0) && up){
-                scrollPage = true; 
+            if(this.options.triggerScrollChildren){
+                if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && !up){
+                    scrollPage = true; 
+                //if reach top element and scroll up
+                } else if((p.scrollTop <= 0) && up){
+                    scrollPage = true; 
+                } else {
+                    scrollPage = false;                      
+                }
             } else {
-                scrollPage = false;                      
+                scrollPage = false;
             }
+            
             p = false;
             
         } else {
@@ -205,18 +214,22 @@ class ScrollPage {
                 }
                 hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
                 if (hasVerticalScrollbar && p !== element && !p.hasAttribute('scroll-page') && !p.hasAttribute('scroll-page-item')) {
-                    
-                    //if reach bottom element and scroll down
-                    if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && !up){
-                        scrollPage = true; 
-                        
-                    //if reach top element and scroll up
-                    } else if((p.scrollTop <= 0) && up){
-                        
-                        scrollPage = true; 
+                    if(this.options.triggerScrollChildren){
+                        //if reach bottom element and scroll down
+                        if((p.offsetHeight + p.scrollTop >= p.scrollHeight) && !up){
+                            scrollPage = true; 
+                            
+                        //if reach top element and scroll up
+                        } else if((p.scrollTop <= 0) && up){
+                            
+                            scrollPage = true; 
+                        } else {
+                            scrollPage = false; 
+                        }
                     } else {
-                        scrollPage = false; 
+                        scrollPage = false;
                     }
+                    
                     p = false;
                     break;
                 }
@@ -228,7 +241,7 @@ class ScrollPage {
         // scrollPage = false; 
         
         
-        if(currentTarget.hasAttribute('scroll-page-item') && currentTarget.querySelectorAll('[scroll-page]').length > 0){
+        if(currentTarget.hasAttribute('scroll-page-item') && currentTarget.querySelectorAll('[scroll-page]').length > 0 && this.options.triggerScrollChildren){
             const nested = currentTarget.querySelectorAll('[scroll-page]');
             const firstNested = nested[0];
             var top,bottom = false;
@@ -442,6 +455,7 @@ class ScrollPage {
         }
 
         this.updateMenuClass();
+        this.updatePageClass();
     }
 
     updateMenuClass(){
@@ -702,6 +716,8 @@ class ScrollPage {
                 
                     _this.currentPage = _this.pageNumber();
                     _this.finishCallback(_this.responseCallback());
+                    // _this.updateMenuClass();
+                    // _this.updatePageClass();
                     return;
                 }
             } else {
@@ -729,6 +745,8 @@ class ScrollPage {
                 
                     _this.currentPage = _this.pageNumber();
                     _this.finishCallback(_this.responseCallback());
+                    // _this.updateMenuClass();
+                    // _this.updatePageClass();
                     return;
                 }
             }
@@ -806,8 +824,7 @@ class ScrollPage {
             this.currentTarget = target;
             
             this.verticalScroll(target, options?.time,options?.animation,options?.finish,options?.next);
-            this.updateMenuClass();
-            this.updatePageClass();
+            
 
             const event = new Event(this.currentTarget.getAttribute("id"));
             this.parent.dispatchEvent(event);
