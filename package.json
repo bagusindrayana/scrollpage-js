@@ -1,7 +1,7 @@
 {
     "name": "scrollpage-js",
     "description": "Single full page scroll animation inspired by fullPage JS",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "keywords": [
         "scroll",
         "scrollview",
