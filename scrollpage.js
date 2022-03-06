@@ -174,8 +174,13 @@ class ScrollPage {
         var _this = this;
         var currentTarget = e.currentTarget;
         var scrollPage = true;
+        if(!this.moveHorizontalOrVertical(e)){
+            scrollPage = false;
+            return scrollPage;
+        }
         let up = false;
         up = this.moveDownOrUp(e);
+        
 
         var element = _this.parent;
         let p = e.target;
@@ -324,6 +329,57 @@ class ScrollPage {
             }
         }
         return up;
+    }
+
+    moveLeftOrRight(e){
+        var right = false;
+        if(e.changedTouches != undefined && e.changedTouches != null){
+            this.touchendX = e.changedTouches[0].screenX;
+            this.touchendY = e.changedTouches[0].screenY;
+            const delx = this.touchendX - this.touchstartX;
+            const dely = this.touchendY - this.touchstartY;
+            if(Math.abs(delx) > Math.abs(dely)){
+                if(delx > 0){
+                    right = true;
+                }
+                else {
+                    right = false;
+                }
+            }
+        }
+
+        if(e.deltaX != undefined && e.deltaX != null){
+            if (e.deltaX < 0) {
+                right = true;
+            } else if (e.deltaX > 0) {
+                right = false;
+            }
+        }
+        return right;
+    }
+
+    moveHorizontalOrVertical(e){
+        var vertical = false;
+        if(e.changedTouches != undefined && e.changedTouches != null){
+            this.touchendX = e.changedTouches[0].screenX;
+            this.touchendY = e.changedTouches[0].screenY;
+            const delx = this.touchendX - this.touchstartX;
+            const dely = this.touchendY - this.touchstartY;
+            if(Math.abs(delx) > Math.abs(dely)){
+                vertical = false;
+            } else {
+                vertical = true;
+            }
+        }
+
+        if(e.deltaX != undefined && e.deltaY != undefined){
+            if (e.deltaX != 0) {
+                vertical = false;
+            } else if(e.deltaY != 0) {
+                vertical = true;
+            }
+        }
+        return vertical;
     }
 
     scrollListener(e) {
