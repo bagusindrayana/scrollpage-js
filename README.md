@@ -25,20 +25,20 @@ HTML
 
 ```html
 <div  id="main-page">
-    <div  id="page1"></div>
-    <div  id="page2"></div>
-    <div  id="page3"></div>
+    <div  id="page1" class="page-item"></div>
+    <div  id="page2" class="page-item"></div>
+    <div  id="page3" class="page-item"></div>
 </div>
 ```
 
 CSS
 ```css
+
 #main-page {
     width: 100%;
 }
 
-#main-page div {
-    display: block;
+#main-page .page-item {
     width: 100%;
     height: 100vh;
 }
@@ -100,6 +100,28 @@ const scrollPage = new ScrollPage("#main-page",{
 }); 
 ```
 
+trigger scroll page if scrolling content reach bottom or top
+```js
+const scrollPage = new ScrollPage("#main-page", {
+    triggerScrollChildren:true//default false
+});
+```
+
+
+height based or relative to parent height,you need to set height for parent or "main-page" element.relative options will also set `postion:relative` for parent element
+```js
+const scrollPage = new ScrollPage("#main-page", {
+    relative:true//default false
+});
+```
+
+non relative scrollpage will be full 100% height of browser window/screen
+
+if you want make sub scrollpage inside another scrollpage make sure you use relative scrollpage and set height for sub scrollpage element.
+see [example](https://github.com/bagusindrayana/scrollpage-js/blob/master/examples/relative.html)
+
+
+
 ## Event & Method
 
 - `onScroll(e)` will be fired if the mouse wheel is scrolling or touch swipe
@@ -111,42 +133,43 @@ const scrollPage = new ScrollPage("#main-page",{
 
 all response values from the event will be in this format
 ```js
-	{
-        sp,// scrollpage object
-        currentPage,// current page number (origin page)
-        nextPage,// next page number (destination page)
-        currentPageName,// current page name (if have `id` otherwise  will olny return page number)
-        nextPageName,// next page name (if have `id` otherwise  will olny return page number)
-    }
+{
+    sp,// scrollpage object
+    currentPage,// current page number (origin page)
+    nextPage,// next page number (destination page)
+    currentPageName,// current page name (if have `id` otherwise  will olny return page number)
+    nextPageName,// next page name (if have `id` otherwise  will olny return page number)
+    index,// current page index (start from 0)
+}
 ```
 
 
 ### Example
 
 ```js
-	scrollPage.onScroll(function(e){
-        console.log("Leaving from : "+e.currentPageName);//only fire if you keep scroll your mouse wheel
-        console.log("Scroll to : "+e.nextPageName);
-    });
+scrollPage.onScroll(function(e){
+    console.log("Leaving from : "+e.currentPageName);//only fire if you keep scroll your mouse wheel
+    console.log("Scroll to : "+e.nextPageName);
+});
 
-    scrollPage.onMove(function(e){
-        console.log("Move to : "+e.nextPageName);//will be fired every frame along with the animation (both moving with menu or mouse wheel)
-    });
-    
-    scrollPage.onStart(function(e){
-        console.log("The previous page was : "+e.currentPageName);
-        console.log("The next page is : "+e.nextPageName);
-    });
+scrollPage.onMove(function(e){
+    console.log("Move to : "+e.nextPageName);//will be fired every frame along with the animation (both moving with menu or mouse wheel)
+});
 
-    scrollPage.onFinish(function(e){
-        console.log("Arrived at : "+e.currentPageName); //will have same value as next page because is already arrived/finish
-        console.log("Done Go to : "+e.nextPageName);
-    });
+scrollPage.onStart(function(e){
+    console.log("The previous page was : "+e.currentPageName);
+    console.log("The next page is : "+e.nextPageName);
+});
 
-    scrollPage.on('page3',function(e){
-        console.log("Event 1 on : "+e.currentPageName); //will have same value as next page
-        console.log("Event 2 on : "+e.nextPageName);
-    });
+scrollPage.onFinish(function(e){
+    console.log("Arrived at : "+e.currentPageName); //will have same value as next page because is already arrived/finish
+    console.log("Done Go to : "+e.nextPageName);
+});
+
+scrollPage.on('page3',function(e){
+    console.log("Event 1 on : "+e.currentPageName); //will have same value as next page
+    console.log("Event 2 on : "+e.nextPageName);
+});
 ```
 
 
@@ -171,7 +194,9 @@ const scrollPage = new ScrollPage("#main-page",{
 ```
 
 ## More Advance Menu by Scott Rhamy @cycle4passion
-https://codepen.io/bagusindrayana/pen/jOaQJmx
+
+In this example the menu will only display dots and on hover will show the page name.just using css
+[CODEPEN](https://codepen.io/bagusindrayana/pen/jOaQJmx)
 
 
 

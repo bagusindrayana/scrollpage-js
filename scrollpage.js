@@ -890,6 +890,7 @@ class ScrollPage {
             nextPage:this.nextPage,
             currentPageName:this.currentTarget.getAttribute('id') ?? this.currentPage,
             nextPageName:this.nextTarget.getAttribute('id') ?? this.nextPage,
+            index:this.index
         };
 
         return datas;
