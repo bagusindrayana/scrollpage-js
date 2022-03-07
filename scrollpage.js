@@ -152,6 +152,8 @@ class ScrollPage {
                 }
                
             }
+
+            _this.moveTo(_this.currentPage);
             
         }
         _this.nextPage = _this.currentPage;
@@ -212,7 +214,8 @@ class ScrollPage {
                 if(p.nodeName == "BODY"){
                     break;
                 }
-                hasVerticalScrollbar = p.scrollHeight > p.clientHeight;
+                var hasOverflow = p.style.overflow === "visible" || p.style.overflow === "auto" || p.style.overflow === "scroll";
+                hasVerticalScrollbar = p.scrollHeight > p.clientHeight && hasOverflow;
                 if (hasVerticalScrollbar && p !== element && !p.hasAttribute('scroll-page') && !p.hasAttribute('scroll-page-item')) {
                     if(this.options.triggerScrollChildren){
                         //if reach bottom element and scroll down
@@ -246,8 +249,8 @@ class ScrollPage {
             const firstNested = nested[0];
             var top,bottom = false;
             
-            
-            var firstNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
+            var hasOverflow = firstNested.style.overflow === "visible" || firstNested.style.overflow === "auto" || firstNested.style.overflow === "scroll";
+            var firstNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight && hasOverflow;
             
             if(firstNestedHasVerticalScrollbar){
                 //if reach bottom element and scroll down
@@ -271,8 +274,8 @@ class ScrollPage {
 
             if(nested.length > 1){
                 const lastNested = nested[nested.length-1];
-            
-                var lastNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight;
+                var hasOverflow = lastNested.style.overflow === "visible" || lastNested.style.overflow === "auto" || lastNested.style.overflow === "scroll";
+                var lastNestedHasVerticalScrollbar = firstNested.scrollHeight > firstNested.clientHeight && hasOverflow;
             
                 if(lastNestedHasVerticalScrollbar){
                     //if reach bottom element and scroll down
