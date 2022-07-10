@@ -383,7 +383,7 @@ class ScrollPage {
             const dely = this.touchendY - this.touchstartY;
             if(Math.abs(delx) > Math.abs(dely)){
                 vertical = false;
-            } else {
+            } else if(Math.abs(delx) < Math.abs(dely)) {
                 vertical = true;
             }
         }
@@ -692,6 +692,8 @@ class ScrollPage {
             }
         }
 
+        _this.updateMenuClass();
+
         function scroll() {
             if(_this.options.relative){
                 var now = 'now' in window.performance ? performance.now() : new Date().getTime();
@@ -720,7 +722,7 @@ class ScrollPage {
                     _this.currentPage = _this.pageNumber();
                     _this.finishCallback(_this.responseCallback());
                     // _this.updateMenuClass();
-                    // _this.updatePageClass();
+                    _this.updatePageClass();
                     return;
                 }
             } else {
@@ -749,7 +751,7 @@ class ScrollPage {
                     _this.currentPage = _this.pageNumber();
                     _this.finishCallback(_this.responseCallback());
                     // _this.updateMenuClass();
-                    // _this.updatePageClass();
+                    _this.updatePageClass();
                     return;
                 }
             }
@@ -790,7 +792,7 @@ class ScrollPage {
         if (typeof page === 'number' ) {
             i = page-1;
             target = this.childs[i];
-        } else if (typeof page === 'string' ) {
+        } else if (typeof page === 'string') {
             i = this.findPageByNode(document.querySelector(page));
             target = this.childs[i];
         } else if (this.findPageByNode(page) !== -1) {
@@ -854,7 +856,9 @@ class ScrollPage {
                     });
                 }
             });
+            
         }
+        
 
        
     }
@@ -866,7 +870,7 @@ class ScrollPage {
             const link = a[i];
             link.addEventListener('click',(e)=>{
                 var href = link.getAttribute("href");
-                if(href.includes("#")){
+                if(href.includes("#") && href !== "#"){
                     e.preventDefault();
                     _this.moveTo(href);
                 }
